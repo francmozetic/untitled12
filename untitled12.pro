@@ -1,9 +1,11 @@
 TEMPLATE = app
 
 QT += qml quick
-CONFIG += c++11
 
-SOURCES += main.cpp
+CONFIG += c++17
+
+SOURCES += main.cpp \
+    widget.cpp
 
 RESOURCES += qml.qrc
 
@@ -13,3 +15,5 @@ QML_IMPORT_PATH =
 # Default rules for deployment.
 include(deployment.pri)
 
+HEADERS += \
+    widget.h
