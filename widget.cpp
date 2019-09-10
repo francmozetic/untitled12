@@ -191,6 +191,35 @@ private:
     size_t winWidth = 25;              // Width of analysis window in milliseconds (default=25)
     size_t frameShift = 10;            // Frame shift in milliseconds (default=10)
 
+    // Convert vector of double to string
+    std::string v_d_to_string(v_d vec) {
+        // The class template std::basic_stringstream implements operations on memory based streams.
+        std::stringstream vecStream;
+        for (size_t i=0; i<vec.size()-1; i++) {
+            vecStream << std::scientific << vec[i];
+            vecStream << ", ";
+        }
+        vecStream << std::scientific << vec.back();
+        vecStream << "\n";
+        return vecStream.str();
+    }
+
+    // Process each frame and extract MFCCs as string
+    std::string processFrame(int16_t* samples, size_t N) {
+        // Add samples from the previous frame that overlap with the current frame to the current samples and create the frame.
+        frame = prevSamples;
+        for (size_t i=0; i<N; i++)
+            frame.push_back(samples[i]);
+        prevSamples.assign(frame.begin() + frameShiftSamples, frame.end());
+
+        preEmphHamming();
+        compPowerSpec();
+        applyLogMelFilterbank();
+        applyDct();
+
+        return v_d_to_string(mfcc);
+    }
+
     // Hertz to Mel conversion
     inline double Hz2Mel(double f) {
         return 2595*std::log10(1 + f/700);
@@ -227,35 +256,6 @@ private:
             Xjo[i+N/2] = t - tw * Xjo[i+N/2];
         }
         return Xjo;
-    }
-
-    // Convert vector of double to string
-    std::string v_d_to_string(v_d vec) {
-        // The class template std::basic_stringstream implements operations on memory based streams.
-        std::stringstream vecStream;
-        for (size_t i=0; i<vec.size()-1; i++) {
-            vecStream << std::scientific << vec[i];
-            vecStream << ", ";
-        }
-        vecStream << std::scientific << vec.back();
-        vecStream << "\n";
-        return vecStream.str();
-    }
-
-    // Process each frame and extract MFCCs as string
-    std::string processFrame(int16_t* samples, size_t N) {
-        // Add samples from the previous frame that overlap with the current frame to the current samples and create the frame.
-        frame = prevSamples;
-        for (size_t i=0; i<N; i++)
-            frame.push_back(samples[i]);
-        prevSamples.assign(frame.begin() + frameShiftSamples, frame.end());
-
-        preEmphHamming();
-        compPowerSpec();
-        applyLogMelFilterbank();
-        applyDct();
-
-        return v_d_to_string(mfcc);
     }
 
     /* Pre-emphasis and Hamming window
