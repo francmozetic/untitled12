@@ -70,7 +70,7 @@ public:
 
         // Initialise buffer (allocate a block of memory of type double, dynamically allocated memory is allocated on Heap^)
         bufferLength = frameShiftSamples;
-        double* buffer = new double[bufferLength];
+        double * buffer = new double[bufferLength];
 
         // Allocate memory for 790 coefficients, read data and process each frame
         vecdmfcc.reserve(790);
@@ -126,7 +126,7 @@ public:
 
         // Initialise buffer (allocate a block of memory of type double, dynamically allocated memory is allocated on Heap^)
         uint16_t bufferLength = winWidthSamples - frameShiftSamples;
-        double* buffer = new double[bufferLength];
+        double * buffer = new double[bufferLength];
         // Calculate bytes per sample (size of the first element in bytes)
         int bufferbps = (sizeof buffer[0]);
         qDebug() << bufferLength;
@@ -169,35 +169,6 @@ public:
         delete [] buffer;
         buffer = nullptr;
         return 0;
-    }
-
-    // Convert vector of double to string
-    std::string v_d_to_string(v_d vec) {
-        // The class template std::basic_stringstream implements operations on memory based streams.
-        std::stringstream vecStream;
-        for (size_t i=0; i<vec.size()-1; i++) {
-            vecStream << std::scientific << vec[i];
-            vecStream << ", ";
-        }
-        vecStream << std::scientific << vec.back();
-        vecStream << "\n";
-        return vecStream.str();
-    }
-
-    // Process each frame and extract MFCCs as string
-    std::string processFrame(int16_t* samples, size_t N) {
-        // Add samples from the previous frame that overlap with the current frame to the current samples and create the frame.
-        frame = prevSamples;
-        for (size_t i=0; i<N; i++)
-            frame.push_back(samples[i]);
-        prevSamples.assign(frame.begin() + frameShiftSamples, frame.end());
-
-        preEmphHamming();
-        compPowerSpec();
-        applyLogMelFilterbank();
-        applyDct();
-
-        return v_d_to_string(mfcc);
     }
 
 
@@ -256,6 +227,35 @@ private:
             Xjo[i+N/2] = t - tw * Xjo[i+N/2];
         }
         return Xjo;
+    }
+
+    // Convert vector of double to string
+    std::string v_d_to_string(v_d vec) {
+        // The class template std::basic_stringstream implements operations on memory based streams.
+        std::stringstream vecStream;
+        for (size_t i=0; i<vec.size()-1; i++) {
+            vecStream << std::scientific << vec[i];
+            vecStream << ", ";
+        }
+        vecStream << std::scientific << vec.back();
+        vecStream << "\n";
+        return vecStream.str();
+    }
+
+    // Process each frame and extract MFCCs as string
+    std::string processFrame(int16_t* samples, size_t N) {
+        // Add samples from the previous frame that overlap with the current frame to the current samples and create the frame.
+        frame = prevSamples;
+        for (size_t i=0; i<N; i++)
+            frame.push_back(samples[i]);
+        prevSamples.assign(frame.begin() + frameShiftSamples, frame.end());
+
+        preEmphHamming();
+        compPowerSpec();
+        applyLogMelFilterbank();
+        applyDct();
+
+        return v_d_to_string(mfcc);
     }
 
     /* Pre-emphasis and Hamming window
