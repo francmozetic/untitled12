@@ -1,10 +1,13 @@
 #include "widget.h"
 
+#include <chrono>
 #include <complex>
 #include <fstream>
+#include <iostream>
 #include <map>
 #include <memory>
 #include <vector>
+
 #include <math.h>
 
 #include <QDebug>
@@ -407,7 +410,12 @@ private:
 };
 
 widget::widget() : pimpl(std::make_unique<impl>()) {
+    auto start = std::chrono::system_clock::now();
     pimpl->do_internal_work();
+    std::chrono::duration<double> duration= std::chrono::system_clock::now() - start;
+    std::cout << "time native: " << duration.count() << " seconds" << std::endl;
+
+
 
 
 
