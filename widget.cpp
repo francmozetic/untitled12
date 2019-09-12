@@ -169,10 +169,9 @@ public:
 
 
 
-    void do_internal_work()
-    {
+    void do_internal_work() {
         internal_data = 5;
-        std::cout << "internal_data = " << internal_data << std::endl;
+        std::cout << "internal_data = " << internal_data << ";" << std::endl;
     }
 
 private:
@@ -419,7 +418,7 @@ widget::widget() : pimpl(std::make_unique<impl>()) {
     auto start = std::chrono::system_clock::now();
     pimpl->do_internal_work();
     std::chrono::duration<double> duration = std::chrono::system_clock::now() - start;
-    std::cout << "time native: " << duration.count() << " seconds" << std::endl;
+    std::cout << "Time native: " << duration.count() << " seconds" << std::endl;
 }
 
 widget::~widget() = default;
