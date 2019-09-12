@@ -15,6 +15,7 @@ public:
     widget(widget&&) = default;
     widget& operator=(widget&&) = default;
 
+    int processTo(std::ifstream &wavFp);
     void do_internal_work();
 
 private:

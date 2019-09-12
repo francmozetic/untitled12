@@ -34,11 +34,11 @@ int main(int argc, char *argv[])
         std::cout << "Unable to open output file: " << mfcPath << std::endl;
     }
 
+    widget test;
+    test.processTo(wavFp);
+
     wavFp.close();
     mfcFp.close();
-
-    widget test;
-    test.do_internal_work();
 
     return app.exec();
 }

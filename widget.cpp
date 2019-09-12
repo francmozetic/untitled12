@@ -109,12 +109,12 @@ public:
 
         // Check audio format
         if (hdr.AudioFormat != 1 || hdr.bitsPerSample != 16) {
-            std::cout << "Unsupported audio format, use 16 bit PCM Wave";
+            std::cout << "Unsupported audio format, use 16 bit PCM Wave" << std::endl;
             return 1;
         }
         // Check sampling rate
         if (hdr.SamplesPerSec != fs) {
-            std::cout << "Sampling rate mismatch: Found" << hdr.SamplesPerSec << "instead of" << fs;
+            std::cout << "Sampling rate mismatch: found " << hdr.SamplesPerSec << " instead of " << fs << std::endl;
             return 1;
         }
 
@@ -123,7 +123,7 @@ public:
         double * buffer = new double[bufferLength];
         // Calculate bytes per sample (size of the first element in bytes)
         int bufferbps = (sizeof buffer[0]);
-        std::cout << bufferLength;
+        std::cout << bufferLength << std::endl;
 
         // Read and set the initial samples
         wavFp.read((char *)buffer, bufferLength * bufferbps);   // cast the pointer of the double variable to a pointer to characters
@@ -407,17 +407,19 @@ private:
     int internal_data = 0;
 };
 
-void widget::do_internal_work() {
+int widget::processTo(std::ifstream &wavFp) {
+    return pimpl->processTo(wavFp);
+}
 
+void widget::do_internal_work() {
     pimpl->do_internal_work();
 }
 
 widget::widget() : pimpl(std::make_unique<impl>()) {
-
     auto start = std::chrono::system_clock::now();
     pimpl->do_internal_work();
-    std::chrono::duration<double> duration= std::chrono::system_clock::now() - start;
+    std::chrono::duration<double> duration = std::chrono::system_clock::now() - start;
     std::cout << "time native: " << duration.count() << " seconds" << std::endl;
 }
 
-widget::~widget() {};
+widget::~widget() = default;
