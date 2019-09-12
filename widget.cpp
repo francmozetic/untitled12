@@ -117,6 +117,7 @@ public:
             std::cout << "Sampling rate mismatch: found " << hdr.SamplesPerSec << " instead of " << fs << std::endl;
             return 1;
         }
+        std::cout << "Audio format ok: 16 bit PCM Wave" << std::endl;
 
         // Initialise buffer (allocate a block of memory of type double, dynamically allocated memory is allocated on Heap^)
         uint16_t bufferLength = winWidthSamples - frameShiftSamples;
@@ -416,7 +417,17 @@ void widget::do_internal_work() {
 
 widget::widget() : pimpl(std::make_unique<impl>()) {
     auto start = std::chrono::system_clock::now();
-    pimpl->do_internal_work();
+
+    const char* wavPath = "partita.wav";
+    std::ifstream wavFp;
+    // Check if input is readable
+    wavFp.open(wavPath);
+    if (!wavFp.is_open()) {
+        std::cout << "Unable to open input file: " << wavPath << std::endl;
+    }
+    pimpl->processTo(wavFp);
+    wavFp.close();
+
     std::chrono::duration<double> duration = std::chrono::system_clock::now() - start;
     std::cout << "Time native: " << duration.count() << " seconds" << std::endl;
 }

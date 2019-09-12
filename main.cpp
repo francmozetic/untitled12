@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
     std::ifstream wavFp;
     std::ofstream mfcFp;
 
-    const char* wavPath = "input.wav";
+    const char* wavPath = "partita.wav";
     const char* mfcPath = "output.mfc";
 
     std::cout << "Initialise input stream: " << wavPath << std::endl;
@@ -36,7 +36,7 @@ int main(int argc, char *argv[])
     }
 
     widget test;
-    test.processTo(wavFp);
+    test.do_internal_work();
 
     wavFp.close();
     mfcFp.close();
