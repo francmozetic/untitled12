@@ -407,17 +407,17 @@ private:
     int internal_data = 0;
 };
 
+void widget::do_internal_work() {
+
+    pimpl->do_internal_work();
+}
+
 widget::widget() : pimpl(std::make_unique<impl>()) {
 
     auto start = std::chrono::system_clock::now();
-
     pimpl->do_internal_work();
-
     std::chrono::duration<double> duration= std::chrono::system_clock::now() - start;
     std::cout << "time native: " << duration.count() << " seconds" << std::endl;
 }
 
-void widget::do_internal_work()
-{
-    pimpl->do_internal_work();
-}
+widget::~widget() {};

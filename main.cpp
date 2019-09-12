@@ -37,5 +37,8 @@ int main(int argc, char *argv[])
     wavFp.close();
     mfcFp.close();
 
+    widget test;
+    test.do_internal_work();
+
     return app.exec();
 }

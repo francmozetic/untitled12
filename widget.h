@@ -1,12 +1,16 @@
 #ifndef WIDGET
 #define WIDGET
 
+#include <QCoreApplication>
+
 #include <memory>
 
-class widget {
+class widget : public QObject {
+    Q_OBJECT
+
 public:
     widget();
-    ~widget() = default;
+    ~widget();
 
     widget(widget&&) = default;
     widget& operator=(widget&&) = default;
