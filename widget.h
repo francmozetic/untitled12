@@ -7,6 +7,7 @@ class widget {
 public:
     widget();
     ~widget() = default;
+    int processTo(std::ifstream &wavFp);
 
     widget(widget&&) = default;
     widget& operator=(widget&&) = default;

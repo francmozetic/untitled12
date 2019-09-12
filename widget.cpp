@@ -175,6 +175,7 @@ public:
     void do_internal_work()
     {
         internal_data = 5;
+        std::cout << "internal_data = " << internal_data << std::endl;
     }
 
 private:
@@ -410,28 +411,11 @@ private:
 };
 
 widget::widget() : pimpl(std::make_unique<impl>()) {
-    // Initialise input and output streams
-    std::ifstream wavFp;
-    std::ofstream mfcFp;
-
-    const char* wavPath = "input.wav";
-    const char* mfcPath = "output.mfc";
-
-    // Check if input is readable
-    wavFp.open(wavPath);
-    if (!wavFp.is_open()) {
-        std::cerr << "Unable to open input file: " << wavPath << std::endl;
-    }
-
-    // Check if output is writable
-    mfcFp.open(mfcPath);
-    if (!mfcFp.is_open()) {
-        std::cerr << "Unable to open output file: " << mfcPath << std::endl;
-        wavFp.close();
-    }
 
     auto start = std::chrono::system_clock::now();
+
     pimpl->do_internal_work();
+
     std::chrono::duration<double> duration= std::chrono::system_clock::now() - start;
     std::cout << "time native: " << duration.count() << " seconds" << std::endl;
 
