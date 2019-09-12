@@ -7,10 +7,7 @@
 #include <map>
 #include <memory>
 #include <vector>
-
 #include <math.h>
-
-#include <QDebug>
 
 class widget::impl {
 
@@ -112,12 +109,12 @@ public:
 
         // Check audio format
         if (hdr.AudioFormat != 1 || hdr.bitsPerSample != 16) {
-            qDebug() << "Unsupported audio format, use 16 bit PCM Wave";
+            std::cout << "Unsupported audio format, use 16 bit PCM Wave";
             return 1;
         }
         // Check sampling rate
         if (hdr.SamplesPerSec != fs) {
-            qDebug() << "Sampling rate mismatch: Found" << hdr.SamplesPerSec << "instead of" << fs;
+            std::cout << "Sampling rate mismatch: Found" << hdr.SamplesPerSec << "instead of" << fs;
             return 1;
         }
 
@@ -126,13 +123,13 @@ public:
         double * buffer = new double[bufferLength];
         // Calculate bytes per sample (size of the first element in bytes)
         int bufferbps = (sizeof buffer[0]);
-        qDebug() << bufferLength;
+        std::cout << bufferLength;
 
         // Read and set the initial samples
         wavFp.read((char *)buffer, bufferLength * bufferbps);   // cast the pointer of the double variable to a pointer to characters
         for (int i=0; i<bufferLength; i++) {
             prevSamples[i] = buffer[i];                         // prevSamples[i] is an ith element of std::vector<double>
-            qDebug() << prevSamples[i];
+            std::cout << prevSamples[i];
         }
         delete [] buffer;
 
@@ -418,9 +415,9 @@ widget::widget() : pimpl(std::make_unique<impl>()) {
 
     std::chrono::duration<double> duration= std::chrono::system_clock::now() - start;
     std::cout << "time native: " << duration.count() << " seconds" << std::endl;
+}
 
-
-
-
-
+void widget::do_internal_work()
+{
+    pimpl->do_internal_work();
 }
