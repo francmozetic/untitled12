@@ -158,7 +158,6 @@ public:
         }
 
         // Allocate memory for self-similarity measures
-        std::cout << "Allocate memory for self-similarity measures: " << std::endl;
         vecdsimilarity.reserve(365 * 790);
         vecdsimilarity.clear();
         std::vector<double> veca, vecb;
@@ -169,10 +168,8 @@ public:
                 vecb = vecdmfcc[i];
                 measure = 1 - cosine_similarity(veca, vecb);
                 vecdsimilarity.push_back(measure);
-                std::cout << measure << " ";
             }
         }
-        std::cout << std::endl;
 
         delete [] buffer;
         buffer = nullptr;
@@ -444,6 +441,11 @@ widget::widget() : pimpl(std::make_unique<impl>()) {
 
     std::chrono::duration<double> duration = std::chrono::system_clock::now() - start;
     std::cout << "Time native: " << duration.count() << " seconds" << std::endl;
+
+    for (int i=1; i<=365; ++i) {
+        std::cout << pimpl->vecdsimilarity[i] << " ";
+    }
+    std::cout << std::endl;
 }
 
 widget::~widget() = default;
