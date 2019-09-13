@@ -50,7 +50,7 @@ public:
     }
 
     // Process each frame and return MFCCs as vector of double
-    std::vector<double> processFrameTo(double* samples, size_t N) {
+    std::vector<double> processFrameTo(int16_t* samples, size_t N) {
         // Add samples from the previous frame that overlap with the current frame to the current samples and create the frame.
         frame = prevSamples;
         for (size_t i=0; i<N; i++)
@@ -76,7 +76,7 @@ public:
 
         // Initialise buffer (allocate a block of memory of type double, dynamically allocated memory is allocated on Heap^)
         bufferLength = frameShiftSamples;
-        double * buffer = new double[bufferLength];
+        int16_t * buffer = new int16_t[bufferLength];
 
         // Allocate memory for 790 coefficients, read data and process each frame
         vecdmfcc.reserve(790);
@@ -130,13 +130,12 @@ public:
             return 1;
         }
 
-        uint16_t bufferLength = winWidthSamples - frameShiftSamples;
-        std::cout << bufferLength << std::endl;
-
         // Initialise buffer (allocate a block of memory of type double, dynamically allocated memory is allocated on Heap^)
-        double * buffer = new double[bufferLength];
+        uint16_t bufferLength = winWidthSamples - frameShiftSamples;
+        int16_t * buffer = new int16_t[bufferLength];
         // Calculate bytes per sample (size of the first element in bytes)
         int bufferbps = (sizeof buffer[0]);
+        std::cout << bufferLength << std::endl;
 
         // Read and set the initial samples
         wavFp.read((char *)buffer, bufferLength * bufferbps);   // cast the pointer of the double variable to a pointer to characters
@@ -147,7 +146,7 @@ public:
 
         // Recalculate buffer size
         bufferLength = frameShiftSamples;
-        buffer = new double[bufferLength];
+        buffer = new int16_t[bufferLength];
 
         // Allocate memory for 790 coefficients, read data and process each frame
         vecdmfcc.reserve(790);
