@@ -102,7 +102,23 @@ public:
             veca = vecdmfcc[j];
             for (size_t i=j; i<790; i++) {
                 vecb = vecdmfcc[i];
-                measure = 1 - cosine_similarity(veca, vecb);
+                // ...measure = 1 - cosine_similarity(veca, vecb);
+                // Lambda expression (capture all variables by reference)
+                measure = 1 - [&veca, &vecb](){
+                    double multiply = 0.0;
+                    double d_a = 0.0;
+                    double d_b = 0.0;
+
+                    std::vector<double>::iterator itera, iterb;
+
+                    for (itera = veca.begin(), iterb = vecb.begin(); itera != veca.end(); itera++, iterb++) {
+                        multiply += *itera * *iterb;
+                        d_a += *itera * *itera;
+                        d_b += *iterb * *iterb;
+                    }
+
+                    return multiply / (sqrt(d_a) * sqrt(d_b));
+                }();
                 vecdsimilarity.push_back(measure);
             }
         }
