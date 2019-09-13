@@ -426,8 +426,6 @@ void widget::do_internal_work() {
 }
 
 widget::widget() : pimpl(std::make_unique<impl>()) {
-    auto start = std::chrono::system_clock::now();
-
     const char* wavPath = "partita.wav";
     std::ifstream wavFp;
     // Check if input is readable
@@ -435,12 +433,14 @@ widget::widget() : pimpl(std::make_unique<impl>()) {
     if (!wavFp.is_open()) {
         std::cout << "Unable to open input file: " << wavPath << std::endl;
     }
+
+    auto start = std::chrono::system_clock::now();
     pimpl->initTo();
     pimpl->processTo(wavFp);
-    wavFp.close();
-
     std::chrono::duration<double> duration = std::chrono::system_clock::now() - start;
     std::cout << "Time native: " << duration.count() << " seconds" << std::endl;
+
+    wavFp.close();
 
     for (int i=1; i<=365; ++i) {
         std::cout << pimpl->vecdsimilarity[i] << " ";
