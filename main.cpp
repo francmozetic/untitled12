@@ -6,6 +6,14 @@
 
 #include <widget.h>
 
+// function object
+class GreaterLength {
+    public:
+        bool operator()(const std::string& f, const std::string& s) const {
+            return f.length() > s.length();
+    }
+};
+
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
@@ -34,6 +42,9 @@ int main(int argc, char *argv[])
     if (!mfcFp.is_open()) {
         std::cout << "Unable to open output file: " << mfcPath << std::endl;
     }
+
+    //std::cout << "descending by length with function object" << std::endl;
+    //std::sort(veca.begin(), veca.end(), GreaterLength());
 
     widget test;
     test.do_internal_work();
