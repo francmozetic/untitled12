@@ -6,6 +6,66 @@
 
 #include <widget.h>
 
+/* ### What is Type Erasure? – Arthur O'Dwyer – Stuff mostly about C++
+ * We need to move the object into a region of storage where we can control its lifetime via explicit delete or
+ * placement-destruction syntax. The by-far easiest way to do that is to heap-allocate our WrappingCallback.
+ */
+
+struct AbstractCallback {
+    virtual int call(int) const = 0;
+    virtual ~AbstractCallback() = default;
+};
+
+template<class T>
+struct WrappingCallback : AbstractCallback {
+    explicit WrappingCallback(T&& cb) : cb_(std::move(cb)) {} // to je pomembno...
+    int call(int x) const override {
+        return cb_(x);
+    }
+
+    T cb_;
+};
+
+struct Callback {
+    std::unique_ptr<AbstractCallback> ptr_;
+
+    template<class T>
+    Callback(T t) : ptr_(std::make_unique<WrappingCallback<T>>(std::move(t))) {} // to je pomembno...
+    /*
+    Callback(T t) {
+        ptr_ = std::make_unique<WrappingCallback<T>>(std::move(t)); // to je pomembno...
+    }
+    */
+    int operator()(int x) const { // call operator...
+        return ptr_->call(x);
+    }
+};
+
+int run_once(const Callback& callback) {
+    std::cout << "is_abstract<AbstractCallback>: "
+              << std::is_abstract<AbstractCallback>::value
+              << '\n';
+    std::cout << "is_polymorphic<AbstractCallback>: "
+              << std::is_polymorphic<AbstractCallback>::value
+              << '\n';
+    std::cout << "is_final<AbstractCallback>: "
+              << std::is_final<AbstractCallback>::value
+              << '\n';
+    std::cout << "is_member_function_pointer<&AbstractCallback::call>: "
+              << std::is_member_function_pointer<decltype(&AbstractCallback::call)>::value
+              << '\n';
+    std::cout << "is_copy_constructible<Callback>: "
+              << std::is_copy_constructible<Callback>::value
+              << '\n';
+    std::cout << "is_move_constructible<Callback>: "
+              << std::is_move_constructible<Callback>::value
+              << '\n';
+    return callback(10);
+}
+// _________________________________________________________________________________________________________________
+
+
+
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
