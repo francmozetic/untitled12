@@ -14,9 +14,6 @@
  * done by breaking the original audio signal down into frames and computing feature vectors for each frame, where the feature
  * vectors can contain STFT values, MFCCs, chroma vectors, or any other musical feature of choice. The width of the frames
  * determines the resolution of the resultant self-similarity matrix.
- *
- * MFCC feature vectors calculation is based on D S Pavan Kumar's MFCC Feature Extractor using C++ STL and C++11. Thank you.
- * Please check the following github repository: https://github.com/dspavankumar/compute-mfcc.
  */
 
 class widget::impl {
@@ -485,6 +482,7 @@ widget::widget() : pimpl(std::make_unique<impl>()) {
     // Time native: 1.92514 seconds
     // Time native: 1.89696 seconds
     // Time native: 1.91688 seconds
+    // Time native: 1.90403 seconds
     // ...
 
     wavFp.close();
