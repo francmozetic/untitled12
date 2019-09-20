@@ -32,11 +32,9 @@ struct Callback {
     // Instances of type Callback can be created with arbitrary types because it has a generic constructor.
     template<class T>
     Callback(T t) : ptr_(std::make_unique<WrappingCallback<T>>(std::move(t))) {} // let's heap-allocate the WrappingCallback...
-    /*
-    Callback(T t) {
-        ptr_ = std::make_unique<WrappingCallback<T>>(std::move(t)); // to je pomembno...
-    }
-    */
+    /* Callback(T t) : ptr_(new WrappingCallback<T>(std::move(t))) {}
+     */
+
     int operator()(int x) const { // call operator...
         return ptr_->call(x);
     }
