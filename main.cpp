@@ -31,7 +31,7 @@ struct Callback {
 
     // Instances of type Callback can be created with arbitrary types because it has a generic constructor.
     template<class T>
-    Callback(T t) : ptr_(std::make_unique<WrappingCallback<T>>(std::move(t))) {} // to je pomembno...
+    Callback(T t) : ptr_(std::make_unique<WrappingCallback<T>>(std::move(t))) {} // let's heap-allocate the WrappingCallback...
     /*
     Callback(T t) {
         ptr_ = std::make_unique<WrappingCallback<T>>(std::move(t)); // to je pomembno...
@@ -61,6 +61,8 @@ int run_once(const Callback& callback) {
     return callback(10);
 }
 // _________________________________________________________________________________________________________________
+
+
 
 
 
@@ -99,7 +101,7 @@ int main(int argc, char *argv[])
     wavFp.close();
     mfcFp.close();
 
-    // function object (run lambda expression once)
+    // ### function object (run lambda expression once)
     auto y = run_once([](int x){ return x; });
     std::cout << "run_once(lambda): " << y << std::endl;
 
