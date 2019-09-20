@@ -18,7 +18,7 @@ struct AbstractCallback {
 
 template<class T>
 struct WrappingCallback : AbstractCallback {
-    explicit WrappingCallback(T&& cb) : cb_(std::move(cb)) {} // to je pomembno...
+    explicit WrappingCallback(T&& cb) : cb_(std::move(cb)) {} // move constructor...
     int call(int x) const override {
         return cb_(x);
     }
