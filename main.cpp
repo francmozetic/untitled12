@@ -66,8 +66,6 @@ int run_once(const Callback& callback) {
 
 
 
-
-
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
