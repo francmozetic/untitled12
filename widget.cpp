@@ -9,6 +9,16 @@
 #include <vector>
 #include <math.h>
 
+/* As introduced to the music information retrieval world by Jonathan Foote (2000), self-similarity matrices
+ * turn multi-dimensional feature vectors from an audio signal into a clear and easily-readable 2-dimensional image. This is
+ * done by breaking the original audio signal down into frames and computing feature vectors for each frame, where the feature
+ * vectors can contain STFT values, MFCCs, chroma vectors, or any other musical feature of choice. The width of the frames
+ * determines the resolution of the resultant self-similarity matrix.
+ *
+ * MFCC feature vectors calculation is based on D S Pavan Kumar's MFCC Feature Extractor using C++ STL and C++11. Thank you.
+ * Please check the following github repository: https://github.com/dspavankumar/compute-mfcc.
+ */
+
 class widget::impl {
 
 public:
@@ -471,6 +481,11 @@ widget::widget() : pimpl(std::make_unique<impl>()) {
     pimpl->processTo(wavFp);
     std::chrono::duration<double> duration = std::chrono::system_clock::now() - start;
     std::cout << "Time native: " << duration.count() << " seconds" << std::endl;
+    // Time native: 1.92913 seconds
+    // Time native: 1.92514 seconds
+    // Time native: 1.89696 seconds
+    // Time native: 1.91688 seconds
+    // ...
 
     wavFp.close();
 
