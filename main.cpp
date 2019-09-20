@@ -18,7 +18,7 @@ struct AbstractCallback {
 
 template<class T>
 struct WrappingCallback : AbstractCallback {
-    explicit WrappingCallback(T&& cb) : cb_(std::move(cb)) {} // move constructor...
+    explicit WrappingCallback(T&& cb) : cb_(std::move(cb)) {} // explicit move constructor...
     int call(int x) const override {
         return cb_(x);
     }
@@ -29,6 +29,7 @@ struct WrappingCallback : AbstractCallback {
 struct Callback {
     std::unique_ptr<AbstractCallback> ptr_;
 
+    // Instances of type Callback can be created with arbitrary types because it has a generic constructor.
     template<class T>
     Callback(T t) : ptr_(std::make_unique<WrappingCallback<T>>(std::move(t))) {} // to je pomembno...
     /*
