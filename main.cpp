@@ -6,6 +6,39 @@
 
 #include <widget.h>
 
+/* ## Type Erasure with Templates from jsmith cplusplus.com article (2010 jsmith)
+ * Instances of type Object can be created with arbitrary types because it has a generic constructor.
+ */
+class Wild {
+public:
+    std::string getName() const {
+        return "Wild";
+    }
+    double implementation(double param) const {
+        return (param * param) / 2.5;
+    }
+};
+
+class Running {
+public:
+    std::string getName() const {
+        return "Running";
+    }
+    double implementation(double param) const {
+        return (param * param) / 2.5;
+    }
+};
+
+class Homeless {
+public:
+    std::string getName() const {
+        return "Homeless";
+    }
+    double implementation(double param) const {
+        return (param * param) / 2.5;
+    }
+};
+
 /* ### What is Type Erasure? – Arthur O'Dwyer – Stuff mostly about C++
  * We need to move the object into a region of storage where we can control its lifetime via explicit delete or
  * placement-destruction syntax. The by-far easiest way to do that is to heap-allocate our WrappingCallback.
