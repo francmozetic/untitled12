@@ -39,6 +39,36 @@ public:
     }
 };
 
+class Object {
+public:
+    template<typename T>
+    Object(const T& obj) : object(new ObjectModel<T>(obj)) {} // copy constructor
+    // Object(const T& obj) : object(std::make_shared<ObjectModel<T>>(obj)) {} // to je pomembno...
+    double implementation(double param) const {
+        return object->implementation(param);
+    }
+
+    struct ObjectConcept {
+        virtual ~ObjectConcept() {}
+        virtual double implementation(double param) const = 0;
+    };
+
+    template<typename T>
+    struct ObjectModel : ObjectConcept {
+        ObjectModel(const T& t) : object(t) {} // copy constructor
+        virtual ~ObjectModel() {}
+        double implementation(double param) const override {
+            return object.implementation(param);
+        }
+    private:
+        T object;
+    };
+
+private:
+    std::shared_ptr<ObjectConcept> object;
+};
+// _________________________________________________________________________________________________________________
+
 /* ### What is Type Erasure? – Arthur O'Dwyer – Stuff mostly about C++
  * We need to move the object into a region of storage where we can control its lifetime via explicit delete or
  * placement-destruction syntax. The by-far easiest way to do that is to heap-allocate our WrappingCallback.
