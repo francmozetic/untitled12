@@ -465,6 +465,9 @@ void widget::do_internal_work() {
 
 widget::widget() : pimpl(std::make_unique<impl>()) {
 
+    std::cout << "is_copy_constructible<impl>: " << std::is_copy_constructible<impl>::value << '\n';
+    std::cout << "is_move_constructible<impl>: " << std::is_move_constructible<impl>::value << '\n';
+
     const char* wavPath = "partita.wav";
     std::ifstream wavFp;
     // Check if input is readable
