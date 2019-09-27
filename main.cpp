@@ -44,12 +44,16 @@ public:
     template<typename T>
     Object(const T& obj) : object(new ObjectModel<T>(obj)) {}
     // Object(const T& obj) : object(std::make_shared<ObjectModel<T>>(obj)) {}
+    std::string getName() const {
+        return object->getName();
+    }
     double implementation(double param) const {
         return object->implementation(param);
     }
 
     struct ObjectConcept {
         virtual ~ObjectConcept() {}
+        virtual std::string getName() const = 0;
         virtual double implementation(double param) const = 0;
     };
 
@@ -57,6 +61,9 @@ public:
     struct ObjectModel : ObjectConcept {
         ObjectModel(const T& t) : object(t) {}
         virtual ~ObjectModel() {}
+        std::string getName() const override {
+            return object.getName();
+        }
         double implementation(double param) const override {
             return object.implementation(param);
         }
