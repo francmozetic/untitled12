@@ -42,7 +42,7 @@ public:
 class Object {
 public:
     template<typename T>
-    Object(const T& obj) : object(new ObjectModel<T>(obj)) {}
+    Object(const T& obj) : object(new ObjectModel<T>(obj)) {} // let's heap-allocate the ObjectModel...
     // Object(const T& obj) : object(std::make_shared<ObjectModel<T>>(obj)) {}
     std::string getName() const {
         return object->getName();
