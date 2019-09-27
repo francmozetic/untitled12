@@ -180,7 +180,7 @@ int main(int argc, char *argv[])
     vec.emplace_back(Object(Homeless()));
 
     for (auto v: vec) {
-        std::cout << v.implementation(10.6) << std::endl;
+        std::cout << v.getName() << ": " << v.implementation(10.6) << std::endl;
     }
     // _________________________________________________________________________________________________________________
 
