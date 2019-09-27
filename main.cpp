@@ -42,7 +42,7 @@ public:
 class Object {
 public:
     template<typename T>
-    Object(const T& obj) : object(new ObjectModel<T>(obj)) {} // copy constructor...
+    Object(const T& obj) : object(new ObjectModel<T>(obj)) {}
     // Object(const T& obj) : object(std::make_shared<ObjectModel<T>>(obj)) {}
     double implementation(double param) const {
         return object->implementation(param);
@@ -55,7 +55,7 @@ public:
 
     template<typename T>
     struct ObjectModel : ObjectConcept {
-        ObjectModel(const T& t) : object(t) {} // copy constructor...
+        ObjectModel(const T& t) : object(t) {}
         virtual ~ObjectModel() {}
         double implementation(double param) const override {
             return object.implementation(param);
@@ -164,10 +164,10 @@ int main(int argc, char *argv[])
     wavFp.close();
     mfcFp.close();
 
-    // ## type erasure with templates (instances of type Object)
+    // ## type erasure with templates
     std::cout << "is_copy_constructible<Object>: " << std::is_copy_constructible<Object>::value << '\n';
     std::cout << "is_move_constructible<Object>: " << std::is_move_constructible<Object>::value << '\n';
-    std::vector<Object> vec;
+    std::vector<Object> vec; // instances of type Object
     vec.emplace_back(Object(Wild()));
     vec.emplace_back(Object(Running()));
     vec.emplace_back(Object(Homeless()));
@@ -177,8 +177,8 @@ int main(int argc, char *argv[])
     }
     // _________________________________________________________________________________________________________________
 
-    // ### function object (run lambda expression once)
-    auto y = run_once([](int x){ return x; });
+    // ### function object
+    auto y = run_once([](int x){ return x; }); // run lambda expression once
     std::cout << "run_once(lambda): " << y << std::endl;
     // _________________________________________________________________________________________________________________
 
