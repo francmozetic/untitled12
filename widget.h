@@ -5,6 +5,11 @@
 
 #include <memory>
 
+/* "Pointer to implementation" or "pImpl" is a C++ programming technique that removes implementation details of a class
+ * from its object representation by placing them in a separate class, accessed through unique-ownership opaque pointer.
+ * This technique is used to construct C++ library interfaces with stable ABI and to reduce compile-time dependencies.
+ */
+
 class widget : public QObject {
     Q_OBJECT
 
