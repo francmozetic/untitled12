@@ -1,6 +1,7 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 
+#include <chrono>
 #include <fstream>
 #include <iostream>
 
@@ -42,8 +43,10 @@ public:
 class Object {
 public:
     template<typename T>
-    Object(const T& obj) : object(new ObjectModel<T>(obj)) {} // let's heap-allocate the ObjectModel...
-    // Object(const T& obj) : object(std::make_shared<ObjectModel<T>>(obj)) {}
+    Object(const T& obj) : object(std::make_shared<ObjectModel<T>>(obj)) {} // let's heap-allocate the ObjectModel...
+    /* Object(const T& obj) : object(new ObjectModel<T>(obj)) {}
+     * Object(const T& obj) : object(std::make_shared<ObjectModel<T>>(obj)) {}
+     */
     std::string getName() const {
         return object->getName();
     }
@@ -174,10 +177,26 @@ int main(int argc, char *argv[])
     // ## type erasure with templates
     std::cout << "is_copy_constructible<Object>: " << std::is_copy_constructible<Object>::value << '\n';
     std::cout << "is_move_constructible<Object>: " << std::is_move_constructible<Object>::value << '\n';
+
+    auto start = std::chrono::system_clock::now();
     std::vector<Object> vec; // instances of type Object
-    vec.emplace_back(Object(Wild()));
-    vec.emplace_back(Object(Running()));
-    vec.emplace_back(Object(Homeless()));
+    for (int i=0; i<10000; ++i) {
+        vec.emplace_back(Object(Wild()));
+        //vec.emplace_back(Object(Running()));
+        //vec.emplace_back(Object(Homeless()));
+    }
+    std::chrono::duration<double> duration = std::chrono::system_clock::now() - start;
+    std::cout << "Time native: " << duration.count() << " seconds" << std::endl;
+    /*
+     * new
+     * Time native: 0.006446
+     * Time native: 0.006671
+     * Time native: 0.006354
+     * make_shared
+     * Time native: 0.003793
+     * Time native: 0.003761
+     * Time native: 0.003992
+     */
 
     for (auto v: vec) {
         std::cout << v.getName() << ": " << v.implementation(10.6) << std::endl;
