@@ -43,7 +43,7 @@ public:
 class Object {
 public:
     template<typename T>
-    Object(const T& obj) : object(std::make_shared<ObjectModel<T>>(obj)) {} // let's heap-allocate the ObjectModel...
+    Object(const T& obj) : object(std::make_shared<ObjectModel<T>>(std::move(obj))) {} // let's heap-allocate the ObjectModel...
     /* Object(const T& obj) : object(new ObjectModel<T>(obj)) {}
      * Object(const T& obj) : object(std::make_shared<ObjectModel<T>>(obj)) {}
      */
@@ -62,7 +62,7 @@ public:
 
     template<typename T>
     struct ObjectModel : ObjectConcept {
-        ObjectModel(const T& t) : object(t) {}
+        ObjectModel(const T& obj) : object(std::move(obj)) {}
         virtual ~ObjectModel() {}
         std::string getName() const override {
             return object.getName();
