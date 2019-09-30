@@ -164,9 +164,22 @@ int main(int argc, char *argv[])
     wavFp.close();
     mfcFp.close();
 
+    std::cout << "is_copy_constructible<Object>: " << std::is_copy_constructible<Object>::value << '\n';
+    std::cout << "is_move_constructible<Object>: " << std::is_move_constructible<Object>::value << '\n';
+    std::vector<Object> vec;
+    vec.emplace_back(Object(Wild()));
+    vec.emplace_back(Object(Running()));
+    vec.emplace_back(Object(Homeless()));
+
+    for (auto v: vec) {
+        std::cout << v.implementation(10.6) << std::endl;
+    }
+    // _________________________________________________________________________________________________________________
+
     // ### function object (run lambda expression once)
     auto y = run_once([](int x){ return x; });
     std::cout << "run_once(lambda): " << y << std::endl;
+    // _________________________________________________________________________________________________________________
 
     return app.exec();
 }
