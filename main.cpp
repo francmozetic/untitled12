@@ -42,8 +42,8 @@ public:
 class Object {
 public:
     template<typename T>
-    Object(const T& obj) : object(new ObjectModel<T>(obj)) {} // copy constructor
-    // Object(const T& obj) : object(std::make_shared<ObjectModel<T>>(obj)) {} // to je pomembno...
+    Object(const T& obj) : object(new ObjectModel<T>(obj)) {} // copy constructor...
+    // Object(const T& obj) : object(std::make_shared<ObjectModel<T>>(obj)) {}
     double implementation(double param) const {
         return object->implementation(param);
     }
@@ -55,7 +55,7 @@ public:
 
     template<typename T>
     struct ObjectModel : ObjectConcept {
-        ObjectModel(const T& t) : object(t) {} // copy constructor
+        ObjectModel(const T& t) : object(t) {} // copy constructor...
         virtual ~ObjectModel() {}
         double implementation(double param) const override {
             return object.implementation(param);
@@ -164,6 +164,7 @@ int main(int argc, char *argv[])
     wavFp.close();
     mfcFp.close();
 
+    // ## type erasure with templates (instances of type Object)
     std::cout << "is_copy_constructible<Object>: " << std::is_copy_constructible<Object>::value << '\n';
     std::cout << "is_move_constructible<Object>: " << std::is_move_constructible<Object>::value << '\n';
     std::vector<Object> vec;
