@@ -75,7 +75,7 @@ public:
     };
 
 private:
-    std::shared_ptr<ObjectConcept> object;
+    std::shared_ptr<const ObjectConcept> object;
 };
 // _________________________________________________________________________________________________________________
 
@@ -178,8 +178,9 @@ int main(int argc, char *argv[])
     std::cout << "is_copy_constructible<Object>: " << std::is_copy_constructible<Object>::value << '\n';
     std::cout << "is_move_constructible<Object>: " << std::is_move_constructible<Object>::value << '\n';
 
-    auto start = std::chrono::system_clock::now();
     std::vector<Object> vec; // instances of type Object
+
+    auto start = std::chrono::system_clock::now();
     for (int i=0; i<10000; ++i) {
         vec.emplace_back(Object(Wild()));
         //vec.emplace_back(Object(Running()));
@@ -196,6 +197,12 @@ int main(int argc, char *argv[])
      * Time native: 0.003793
      * Time native: 0.003761
      * Time native: 0.003992
+     * std::move
+     * Time native: 0.00386433 seconds
+     * Time native: 0.00396666 seconds
+     * Time native: 0.00367069 seconds
+     * const
+     * Time native: 0.00379101 seconds
      */
 
     for (auto v: vec) {
