@@ -143,7 +143,7 @@ void draw(const int& x, std::ostream& out, size_t position) {
 
 class object_t {
 public:
-    object_t(const int& x) : self_(std::make_unique<int_model_t>(x)) { std::cout << "ctor" << std::endl; }
+    object_t(int x) : self_(std::make_unique<int_model_t>(std::move(x))) { std::cout << "ctor" << std::endl; }
 
     object_t(const object_t& x) : self_(std::make_unique<int_model_t>(*x.self_)) {}
     object_t(object_t&&) noexcept = default;
@@ -156,7 +156,7 @@ public:
 
 private:
     struct int_model_t {
-        int_model_t(const int& x) : data_(x) {}
+        int_model_t(int x) : data_(std::move(x)) {}
         void draw_(std::ostream& out, size_t position) const {
             draw(data_, out, position);
         }
@@ -254,6 +254,28 @@ int main(int argc, char *argv[])
     auto y = run_once([](int x){ return x; }); // run lambda expression once
     std::cout << "run_once(lambda): " << y << std::endl;
     // _________________________________________________________________________________________________________________
+
+    // ####
+    document_t document;
+    document.reserve(10);
+
+    document.emplace_back(0);
+    document.emplace_back(1);
+    document.emplace_back(2);
+    document.emplace_back(3);
+
+    auto start0 = std::chrono::system_clock::now();
+    for (int i=0; i<10000; ++i) {
+        std::reverse(document.begin(), document.end());
+    }
+    std::chrono::duration<double> duration0 = std::chrono::system_clock::now() - start0;
+    std::cout << "Time native: " << duration0.count() << " seconds" << std::endl;
+    /*
+     * Time native: 0.000272 seconds
+     * Time native: 0.000281 seconds
+     * Time native: 0.000272 seconds
+     */
+    draw(document, std::cout, 0);
 
     return app.exec();
 }
