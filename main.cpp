@@ -137,7 +137,8 @@ int run_once(const Callback& callback) {
 }
 // _________________________________________________________________________________________________________________
 
-/* ####
+/* #### better code
+ * Polymorphism is implementation detail.
  */
 void draw(const int& x, std::ostream& out, size_t position) {
     out << std::string(position, ' ') << x << std::endl;
@@ -156,8 +157,8 @@ public:
         std::cout << "ctor" << std::endl;
     }
 
-    object_t(const object_t& x) : self_(x.self_->copy_()) {} // copy constructor...
-    object_t(object_t&&) noexcept = default; // move constructor...
+    object_t(const object_t& x) : self_(x.self_->copy_()) {} // we have to virtualize copy...
+    object_t(object_t&&) noexcept = default;
     object_t& operator=(const object_t& x) { return *this = object_t(x); }
     object_t& operator=(object_t&&) noexcept = default;
 
@@ -284,12 +285,12 @@ int main(int argc, char *argv[])
     std::cout << "run_once(lambda): " << y << std::endl;
     // _________________________________________________________________________________________________________________
 
-    // ####
+    // #### better code
     document_t document;
     document.reserve(10);
 
     document.emplace_back(0);
-    document.emplace_back(1);
+    document.emplace_back(std::string("Hello!"));
     document.emplace_back(2);
     document.emplace_back(3);
 
