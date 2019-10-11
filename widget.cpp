@@ -44,7 +44,7 @@ public:
     }
 
     // Process each frame and return MFCCs as vector of double
-    std::vector<double> processFrameTo(int16_t* samples, size_t N) {
+    std::vector<double> processFrameTo(double* samples, size_t N) {
         // Add samples from the previous frame that overlap with the current frame to the current samples and create the frame.
         frame = prevSamples;
         for (size_t i=0; i<N; i++)
@@ -60,7 +60,7 @@ public:
     }
 
     // Read samples, extract MFCCs and calculate self-similarity measures
-    int processSamplesTo() {
+    int processSamplesTo(std::vector<double> levels) {
         uint16_t bufferLength = winWidthSamples - frameShiftSamples;
         uint16_t position = bufferLength;
 
@@ -68,22 +68,22 @@ public:
         for (int i=0; i<bufferLength; i++)
             prevSamples[i] = levels[i];
 
-        // Initialise buffer (allocate a block of memory of type int16_t, dynamically allocated memory is allocated on Heap^)
+        // Initialise buffer (allocate a block of memory of type double, dynamically allocated memory is allocated on Heap^)
         bufferLength = frameShiftSamples;
-        int16_t* buffer = new int16_t[bufferLength];
+        double* buffer = new double[bufferLength];
 
         // Allocate memory for 790 coefficients, read data and process each frame
         vecdmfcc.reserve(790);
         vecdmfcc.clear();
 
         for (int i=0; i<bufferLength; i++)
-            buffer[i] = levels[position+i];
+            buffer[i] = levels[position + i];
         position += bufferLength;
 
-        while (position < levels.count() && vecdmfcc.size() < 790) {
+        while (position < levels.size() && vecdmfcc.size() < 790) {
             vecdmfcc.push_back(processFrameTo(buffer, bufferLength));
             for (int i=0; i<bufferLength; i++)
-                buffer[i] = levels[position+i];
+                buffer[i] = levels[position + i];
             position += bufferLength;
         }
 
@@ -101,7 +101,7 @@ public:
             }
         }
 
-        delete [] buffer;
+        delete [] buffer; // delete a block of memory
         buffer = nullptr;
         return 0;
     }
@@ -111,7 +111,7 @@ public:
         // Read the wav header
         wavHeader hdr;
         int headerSize = sizeof(wavHeader);
-        wavFp.read((char *) &hdr, headerSize); // cast the address of hdr, denoted &hdr, to a char *, i.e. a pointer to characters/bytes
+        wavFp.read((char *)&hdr, headerSize); // cast the address of hdr, denoted &hdr, to a char *, i.e. a pointer to characters
 
         // Check audio format
         if (hdr.AudioFormat != 1 || hdr.bitsPerSample != 16) {
@@ -124,15 +124,15 @@ public:
             return 1;
         }
 
-        // Initialise buffer (allocate a block of memory of type int16_t, dynamically allocated memory is allocated on Heap^)
+        // Initialise buffer (allocate a block of memory of type double, dynamically allocated memory is allocated on Heap^)
         uint16_t bufferLength = winWidthSamples - frameShiftSamples;
-        int16_t* buffer = new int16_t[bufferLength];
+        double* buffer = new double[bufferLength];
         // Calculate bytes per sample (size of the first element in bytes)
-        int bufferBPS = (sizeof buffer[0]);
+        int bufferbps = (sizeof buffer[0]);
         qDebug() << bufferLength;
 
         // Read and set the initial samples
-        wavFp.read((char *) buffer, bufferLength*bufferBPS);    // cast the pointer of the int16_t variable to a pointer to characters/bytes
+        wavFp.read((char *)buffer, bufferLength * bufferbps);   // cast the pointer of the double variable to a pointer to characters
         for (int i=0; i<bufferLength; i++) {
             prevSamples[i] = buffer[i];                         // prevSamples[i] is an ith element of std::vector<double>
             qDebug() << prevSamples[i];
@@ -141,15 +141,15 @@ public:
 
         // Recalculate buffer size
         bufferLength = frameShiftSamples;
-        buffer = new int16_t[bufferLength];
+        buffer = new double[bufferLength];
 
         // Allocate memory for 790 coefficients, read data and process each frame
         vecdmfcc.reserve(790);
         vecdmfcc.clear();
-        wavFp.read((char *) buffer, bufferLength*bufferBPS);
-        while (wavFp.gcount() == bufferLength*bufferBPS && !wavFp.eof() && vecdmfcc.size() < 790) {
+        wavFp.read((char *)buffer, bufferLength * bufferbps);
+        while (wavFp.gcount() == bufferLength * bufferbps && !wavFp.eof() && vecdmfcc.size() < 790) {
             vecdmfcc.push_back(processFrameTo(buffer, bufferLength));
-            wavFp.read((char *) buffer, bufferLength*bufferBPS);
+            wavFp.read((char *)buffer, bufferLength * bufferbps);
         }
 
         // Allocate memory for self-similarity measures
@@ -172,7 +172,7 @@ public:
     }
 
     // Convert vector of double to string
-    std::string v_d_to_string (v_d vec) {
+    std::string v_d_to_string(v_d vec) {
         // The class template std::basic_stringstream implements operations on memory based streams.
         std::stringstream vecStream;
         for (size_t i=0; i<vec.size()-1; i++) {
@@ -327,7 +327,7 @@ private:
     }
 
     // Precompute filterbank
-    void initFilterbank () {
+    void initFilterbank(void) {
         // Convert low and high frequencies to Mel scale
         double lowFreqMel = Hz2Mel(lowFreq);
         double highFreqMel = Hz2Mel(highFreq);
@@ -408,8 +408,6 @@ private:
 
 widget::widget() : pimpl(std::make_unique<impl>()) {
     pimpl->do_internal_work();
-
-
 
 
 
