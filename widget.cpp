@@ -22,7 +22,6 @@ public:
     size_t winWidthSamples, frameShiftSamples, numFFTBins;
     std::vector<double> frame, prevSamples, powerSpectralCoef, lmfbCoef, hamming, mfcc;
     std::vector<std::vector<double>> vecdmfcc, fbank, dct;
-    std::map<int, std::map<int, std::complex<double>>> twiddle;
 
     std::vector<double> vecdsimilarity;
 
@@ -181,6 +180,8 @@ public:
     }
 
 private:
+    std::map<int, std::map<int, std::complex<double>>> twiddle;
+
     size_t fs = 44100;                 // Sampling rate in Hertz (default=16000)
     size_t numCepstral = 12;           // Number of output cepstra, excluding log-energy (default=12)
     size_t numFilters = 40;            // Number of Mel warped filters in filterbank (default=40)
