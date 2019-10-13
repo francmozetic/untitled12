@@ -83,7 +83,6 @@ private:
  * We need to move the object into a region of storage where we can control its lifetime via explicit delete or
  * placement-destruction syntax. The by-far easiest way to do that is to heap-allocate our WrappingCallback.
  */
-
 struct AbstractCallback {
     virtual int call(int) const = 0;
     virtual ~AbstractCallback() = default;
@@ -137,7 +136,7 @@ int run_once(const Callback& callback) {
 }
 // _________________________________________________________________________________________________________________
 
-/* #### better code
+/* #### Runtime polymorphism
  * Polymorphism is implementation detail.
  */
 void draw(const int& x, std::ostream& out, size_t position) {
@@ -150,17 +149,17 @@ void draw(const std::string& x, std::ostream& out, size_t position) {
 
 class object_t {
 public:
-    object_t(int x) : self_(std::make_unique<int_model_t>(std::move(x))) {
+    object_t(std::string x) : self_(std::make_unique<string_model_t>(std::move(x))) {
         std::cout << "ctor" << std::endl;
     }
-    object_t(std::string x) : self_(std::make_unique<string_model_t>(std::move(x))) {
+    object_t(int x) : self_(std::make_unique<int_model_t>(std::move(x))) {
         std::cout << "ctor" << std::endl;
     }
 
     object_t(const object_t& x) : self_(x.self_->copy_()) {} // we have to virtualize copy...
     object_t(object_t&&) noexcept = default;
-    object_t& operator=(const object_t& x) { return *this = object_t(x); }
-    object_t& operator=(object_t&&) noexcept = default;
+    object_t& operator=(const object_t& x) { return *this = object_t(x); } // copy assignment operator...
+    object_t& operator=(object_t&&) noexcept = default; // move assignment operator...
 
     friend void draw(const object_t& x, std::ostream& out, size_t position) {
         x.self_->draw_(out, position);
@@ -172,16 +171,6 @@ private:
         virtual std::unique_ptr<concept_t> copy_() const = 0;
         virtual void draw_(std::ostream&, size_t) const = 0;
     };
-    struct int_model_t final : concept_t {
-        int_model_t(int x) : data_(std::move(x)) {}
-        std::unique_ptr<concept_t> copy_() const override {
-            return std::make_unique<int_model_t>(*this);
-        }
-        void draw_(std::ostream& out, size_t position) const override {
-            draw(data_, out, position);
-        }
-        int data_;
-    };
     struct string_model_t final : concept_t {
         string_model_t(std::string x) : data_(std::move(x)) {}
         std::unique_ptr<concept_t> copy_() const override {
@@ -191,6 +180,16 @@ private:
             draw(data_, out, position);
         }
         std::string data_;
+    };
+    struct int_model_t final : concept_t {
+        int_model_t(int x) : data_(std::move(x)) {}
+        std::unique_ptr<concept_t> copy_() const override {
+            return std::make_unique<int_model_t>(*this);
+        }
+        void draw_(std::ostream& out, size_t position) const override {
+            draw(data_, out, position);
+        }
+        int data_;
     };
 
     std::unique_ptr<concept_t> self_;
