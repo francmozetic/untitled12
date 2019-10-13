@@ -325,7 +325,6 @@ int main(int argc, char *argv[])
      * Time native: 0.000272 seconds
      * Time native: 0.000281 seconds
      * Time native: 0.000272 seconds
-     * Time native: 0.000272643 seconds
      */
     draw(document, std::cout, 0);
 
