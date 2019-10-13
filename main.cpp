@@ -163,20 +163,22 @@ public:
         std::cout << "ctor" << std::endl;
     }
 
-    object_t(const object_t& x) : self_(x.self_->copy_()) {} // we have to virtualize copy...
+    object_t(const object_t& x) : self_(x.self_->copy_()) {}
     object_t(object_t&&) noexcept = default;
-    object_t& operator=(const object_t& x) { return *this = object_t(x); } // copy assignment operator...
-    object_t& operator=(object_t&&) noexcept = default; // move assignment operator...
+    object_t& operator=(const object_t& x) { // copy assignment operator
+        return *this = object_t(x);
+    }
+    object_t& operator=(object_t&&) noexcept = default; // move assignment operator
 
     friend void draw(const object_t& x, std::ostream& out, size_t position) {
         x.self_->draw_(out, position);
     }
 
 private:
-    struct concept_t {
+    struct concept_t { // a base class for implementation goes here...
         virtual ~concept_t() = default;
-        virtual std::unique_ptr<concept_t> copy_() const = 0;
-        virtual void draw_(std::ostream&, size_t) const = 0;
+        virtual std::unique_ptr<concept_t> copy_() const = 0; // virtual copy_ function...
+        virtual void draw_(std::ostream&, size_t) const = 0; // virtual draw_ function...
     };
     struct string_model_t final : concept_t {
         string_model_t(std::string x) : data_(std::move(x)) {}
