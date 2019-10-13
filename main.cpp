@@ -147,8 +147,8 @@ void draw(const int& x, std::ostream& out, size_t position) {
     out << std::string(position, ' ') << x << std::endl;
 }
 
-void draw(const Wild& x, std::ostream& out, size_t position) {
-    out << std::string(position, ' ') << x.getName() << std::endl;
+void draw(const Wild&, std::ostream& out, size_t position) {
+    out << std::string(position, ' ') << "Wild..." << std::endl;
 }
 
 class object_t {
@@ -157,6 +157,9 @@ public:
         std::cout << "ctor" << std::endl;
     }
     object_t(int x) : self_(std::make_unique<int_model_t>(std::move(x))) {
+        std::cout << "ctor" << std::endl;
+    }
+    object_t(Wild x) : self_(std::make_unique<wild_model_t>(std::move(x))) {
         std::cout << "ctor" << std::endl;
     }
 
@@ -194,6 +197,16 @@ private:
             draw(data_, out, position);
         }
         int data_;
+    };
+    struct wild_model_t final : concept_t {
+        wild_model_t(Wild x) : data_(std::move(x)) {}
+        std::unique_ptr<concept_t> copy_() const override {
+            return std::make_unique<wild_model_t>(*this);
+        }
+        void draw_(std::ostream& out, size_t position) const override {
+            draw(data_, out, position);
+        }
+        Wild data_;
     };
 
     std::unique_ptr<concept_t> self_;
@@ -289,13 +302,16 @@ int main(int argc, char *argv[])
     // _________________________________________________________________________________________________________________
 
     // #### better code
+    std::cout << "is_copy_constructible<object_t>: " << std::is_copy_constructible<object_t>::value << '\n';
+    std::cout << "is_move_constructible<object_t>: " << std::is_move_constructible<object_t>::value << '\n';
+
     document_t document;
     document.reserve(10);
 
     document.emplace_back(0);
     document.emplace_back(std::string("Hello!"));
     document.emplace_back(2);
-    document.emplace_back(3);
+    document.emplace_back(Wild()); // creates a temporary object...
 
     auto start0 = std::chrono::system_clock::now();
     for (int i=0; i<10000; ++i) {
