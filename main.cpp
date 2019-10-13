@@ -136,15 +136,19 @@ int run_once(const Callback& callback) {
 }
 // _________________________________________________________________________________________________________________
 
-/* #### Runtime polymorphism
+/* #### Polymorphic types
  * Polymorphism is implementation detail.
  */
+void draw(const std::string& x, std::ostream& out, size_t position) {
+    out << std::string(position, ' ') << x << std::endl;
+}
+
 void draw(const int& x, std::ostream& out, size_t position) {
     out << std::string(position, ' ') << x << std::endl;
 }
 
-void draw(const std::string& x, std::ostream& out, size_t position) {
-    out << std::string(position, ' ') << x << std::endl;
+void draw(const Wild& x, std::ostream& out, size_t position) {
+    out << std::string(position, ' ') << x.getName() << std::endl;
 }
 
 class object_t {
