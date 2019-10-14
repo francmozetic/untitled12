@@ -496,8 +496,9 @@ widget::widget() : pimpl(std::make_unique<impl>()) {
     std::cout << std::endl;
 }
 
+// Implementation of copy constructor
 // widget::widget(const widget& other) : pimpl(new impl(*other.pimpl)) {
-widget::widget(const widget& other) : pimpl(std::make_unique<impl>(*other.pimpl)) {
+widget::widget(const widget& other) : QObject(), pimpl(std::make_unique<impl>(*other.pimpl)) {
     std::cout << "copy" << std::endl;
 }
 
