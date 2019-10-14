@@ -497,7 +497,7 @@ widget::widget() : pimpl(std::make_unique<impl>()) {
 }
 
 // Implementation of copy constructor
-// widget::widget(const widget& other) : pimpl(new impl(*other.pimpl)) {
+// widget::widget(const widget& other) : pimpl(new impl(*other.pimpl)) { // Scott Meyers' C++11 approach
 widget::widget(const widget& other) : QObject(), pimpl(std::make_unique<impl>(*other.pimpl)) {
     std::cout << "copy" << std::endl;
 }
