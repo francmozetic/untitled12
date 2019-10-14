@@ -261,7 +261,9 @@ int main(int argc, char *argv[])
         std::cout << "Unable to open output file: " << mfcPath << std::endl;
     }
 
+    widget so;
     widget test;
+    test = so;
     test.do_internal_work();
 
     wavFp.close();

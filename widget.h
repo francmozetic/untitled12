@@ -18,9 +18,10 @@ public:
     ~widget();
 
     widget(widget&&) = default;
-    widget(widget const& other) = delete;
     widget& operator=(widget&&) = default;
-    widget& operator=(widget const& other) = delete;
+
+    widget(const widget& other);
+    widget& operator=(const widget& other);
 
     int processTo(std::ifstream &wavFp);
     void do_internal_work();
