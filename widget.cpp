@@ -496,6 +496,10 @@ widget::widget() : pimpl(std::make_unique<impl>()) {
     std::cout << std::endl;
 }
 
+/* The copy operations should either be explicitly deleted or implemented by performing a deep copy of the
+ * impl structure.
+ */
+
 // Implementation of copy constructor
 // widget::widget(const widget& other) : pimpl(new impl(*other.pimpl)) { // Scott Meyers' C++11 approach
 widget::widget(const widget& other) : QObject(), pimpl(std::make_unique<impl>(*other.pimpl)) {
