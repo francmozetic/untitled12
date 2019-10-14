@@ -262,8 +262,7 @@ int main(int argc, char *argv[])
     }
 
     widget so;
-    widget test;
-    test = so;
+    widget test(so); // copy
     test.do_internal_work();
 
     wavFp.close();
