@@ -496,18 +496,19 @@ widget::widget() : pimpl(std::make_unique<impl>()) {
     std::cout << std::endl;
 }
 
-widget::~widget() = default;
-
 // widget::widget(const widget& other) : pimpl(new impl(*other.pimpl)) {
 widget::widget(const widget& other) : pimpl(std::make_unique<impl>(*other.pimpl)) {
     std::cout << "copy" << std::endl;
 }
 
+// Implementation of copy assignment
 widget& widget::operator=(const widget& other) {
     std::cout << "copy assignment operator" << std::endl;
     if (this != &other) {
-        // pimpl.reset(new impl(*other.pimpl));
+        // pimpl.reset(new impl(*other.pimpl)); // Scott Meyers' C++11 approach
         pimpl = std::make_unique<impl>(*other.pimpl);
     }
     return *this;
 }
+
+widget::~widget() = default;
