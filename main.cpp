@@ -137,7 +137,12 @@ int run_once(const Callback& callback) {
 // _________________________________________________________________________________________________________________
 
 /* #### Polymorphic types
- * Polymorphism is implementation detail.
+ * Runtime concept idiom allows polymorphism when needed, without inheritance. Polymorphic types are used like any
+ * other types, including built-in types. This code is as efficient as base class mechanism. I don't have to wrap
+ * integers, strings, ... into the objects.
+ * There is a piece of code within which I want to deal with a set of types that share a particular attribute (they
+ * might be drawable, ...). So I want to handle those objects as if they were the same. That's what we mean by
+ * polymorphic type.
  */
 void draw(const std::string& x, std::ostream& out, size_t position) {
     out << std::string(position, ' ') << x << std::endl;
