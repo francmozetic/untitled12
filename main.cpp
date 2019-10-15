@@ -4,6 +4,7 @@
 #include <chrono>
 #include <fstream>
 #include <iostream>
+#include <memory>
 
 #include <widget.h>
 
@@ -261,9 +262,15 @@ int main(int argc, char *argv[])
         std::cout << "Unable to open output file: " << mfcPath << std::endl;
     }
 
-    widget so;
+    widget so; // creates a widget object in automatic storage
     widget test(so); // copy
     test.do_internal_work();
+
+    /*
+    widget so; // creates a widget object in automatic storage
+    widget test;
+    test = so; // copy assignment
+    test.do_internal_work(); */
 
     wavFp.close();
     mfcFp.close();
