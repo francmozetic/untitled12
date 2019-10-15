@@ -325,6 +325,11 @@ int main(int argc, char *argv[])
         std::forward_list<int> flis(1000000);
         measurePerformance(flis, "std::forward_list<int>(1000000)");
     }
+    {
+        std::map<int, int> map;
+        for (auto i=0; i<=1000000; ++i) map[i] = i;
+        measurePerformance(map, "std::map<int, int>");
+    }
 
     auto y = run_once([](int x){ return x; }); // run lambda expression once
     std::cout << "run_once(lambda): " << y << std::endl;

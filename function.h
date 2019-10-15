@@ -4,6 +4,9 @@
 #include <forward_list>
 #include <iomanip>
 #include <iostream>
+#include <list>
+#include <map>
+#include <vector>
 
 template <typename T>
 void measurePerformance(T& t, const std::string& cont) {
