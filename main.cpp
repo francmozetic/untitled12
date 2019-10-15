@@ -44,7 +44,7 @@ public:
 
 class Object {
 public:
-    template<typename T>
+    template <typename T>
     Object(const T& obj) : object(std::make_shared<ObjectModel<T>>(std::move(obj))) {} // let's heap-allocate the ObjectModel...
     /* Object(const T& obj) : object(new ObjectModel<T>(obj)) {}
      * Object(const T& obj) : object(std::make_shared<ObjectModel<T>>(obj)) {}
@@ -62,7 +62,7 @@ public:
         virtual double implementation(double param) const = 0;
     };
 
-    template<typename T>
+    template <typename T>
     struct ObjectModel : ObjectConcept {
         ObjectModel(const T& obj) : object(std::move(obj)) {}
         virtual ~ObjectModel() {}
@@ -90,7 +90,7 @@ struct AbstractCallback {
     virtual ~AbstractCallback() = default;
 };
 
-template<class T>
+template <class T>
 struct WrappingCallback : AbstractCallback {
     explicit WrappingCallback(T&& cb) : cb_(std::move(cb)) {} // explicit move constructor...
     int call(int x) const override {
@@ -101,10 +101,10 @@ struct WrappingCallback : AbstractCallback {
 };
 
 struct Callback {
+    // Instances of type Callback can be created with arbitrary types because it has a generic constructor.
     std::unique_ptr<AbstractCallback> ptr_;
 
-    // Instances of type Callback can be created with arbitrary types because it has a generic constructor.
-    template<class T>
+    template <class T>
     Callback(T t) : ptr_(std::make_unique<WrappingCallback<T>>(std::move(t))) {} // let's heap-allocate the WrappingCallback...
     /* Callback(T t) : ptr_(new WrappingCallback<T>(std::move(t))) {}
      */
