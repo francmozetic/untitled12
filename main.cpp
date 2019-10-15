@@ -312,7 +312,7 @@ int main(int argc, char *argv[])
     }
     // _________________________________________________________________________________________________________________
 
-    // ### run lambda
+    // ### run lambda expression
     {
         std::vector<int> vec(1000000);
         measurePerformance(vec, "std::vector<int>(1000000)");
@@ -328,8 +328,13 @@ int main(int argc, char *argv[])
     {
         std::map<int, int> map;
         for (auto i=0; i<=1000000; ++i) map[i] = i;
-        measurePerformance(map, "std::map<int, int>");
+        measurePerformance(map, "std::map<int,int>");
     }
+    {
+        std::unordered_map<int, int> unmap;
+        for (auto i=0; i<=1000000; ++i) unmap[i] = i;
+        measurePerformance(unmap, "std::unordered_map<int,int>");
+     }
 
     auto y = run_once([](int x){ return x; }); // run lambda expression once
     std::cout << "run_once(lambda): " << y << std::endl;
