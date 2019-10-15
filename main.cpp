@@ -283,7 +283,7 @@ int main(int argc, char *argv[])
     std::vector<Object> vec; // instances of type Object
 
     auto start = std::chrono::system_clock::now();
-    for (int i=0; i<10000; ++i) {
+    for (auto i=0; i<10000; ++i) {
         vec.emplace_back(Object(Wild()));
         //vec.emplace_back(Object(Running()));
         //vec.emplace_back(Object(Homeless()));
@@ -305,6 +305,7 @@ int main(int argc, char *argv[])
      * Time native: 0.00367069 seconds
      * const
      * Time native: 0.00379101 seconds
+     * Time native: 0.00397999 seconds
      */
 
     for (auto v: vec) {
@@ -312,7 +313,7 @@ int main(int argc, char *argv[])
     }
     // _________________________________________________________________________________________________________________
 
-    // ### run lambda expression
+    // ### run lambda
     {
         std::vector<int> vec(1000000);
         measurePerformance(vec, "std::vector<int>(1000000)");
@@ -334,7 +335,7 @@ int main(int argc, char *argv[])
         std::unordered_map<int, int> unmap;
         for (auto i=0; i<=1000000; ++i) unmap[i] = i;
         measurePerformance(unmap, "std::unordered_map<int,int>");
-     }
+    }
 
     auto y = run_once([](int x){ return x; }); // run lambda expression once
     std::cout << "run_once(lambda): " << y << std::endl;
@@ -353,7 +354,7 @@ int main(int argc, char *argv[])
     document.emplace_back(Wild()); // creates a temporary object...
 
     auto start0 = std::chrono::system_clock::now();
-    for (int i=0; i<10000; ++i) {
+    for (auto i=0; i<10000; ++i) {
         std::reverse(document.begin(), document.end());
     }
     std::chrono::duration<double> duration0 = std::chrono::system_clock::now() - start0;
@@ -362,6 +363,9 @@ int main(int argc, char *argv[])
      * Time native: 0.000272 seconds
      * Time native: 0.000281 seconds
      * Time native: 0.000272 seconds
+     * Time native: 0.0002776430 seconds
+     * Time native: 0.0002729770 seconds
+     * Time native: 0.0002723100 seconds
      */
     draw(document, std::cout, 0);
 
