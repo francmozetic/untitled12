@@ -312,7 +312,7 @@ int main(int argc, char *argv[])
     }
     // _________________________________________________________________________________________________________________
 
-    // ### run function object
+    // ### run lambda
     {
         std::vector<int> vec(1000000);
         measurePerformance(vec, "std::vector<int>(1000000)");
@@ -321,6 +321,11 @@ int main(int argc, char *argv[])
         std::list<int> lis(1000000);
         measurePerformance(lis, "std::list<int>(1000000)");
     }
+    {
+        std::forward_list<int> flis(1000000);
+        measurePerformance(flis, "std::forward_list<int>(1000000)");
+    }
+
     auto y = run_once([](int x){ return x; }); // run lambda expression once
     std::cout << "run_once(lambda): " << y << std::endl;
     // _________________________________________________________________________________________________________________
