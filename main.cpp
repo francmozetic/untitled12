@@ -313,7 +313,7 @@ int main(int argc, char *argv[])
     }
     // _________________________________________________________________________________________________________________
 
-    // ### run lambda
+    // ### measure performance
     {
         std::vector<int> vec(1000000);
         measurePerformance(vec, "std::vector<int>(1000000)");
@@ -368,6 +368,7 @@ int main(int argc, char *argv[])
      * Time native: 0.0002723100 seconds
      */
     draw(document, std::cout, 0);
+    // _________________________________________________________________________________________________________________
 
     return app.exec();
 }

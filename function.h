@@ -1,6 +1,7 @@
 #ifndef FUNCTION_H
 #define FUNCTION_H
 
+#include <chrono>
 #include <forward_list>
 #include <iomanip>
 #include <iostream>
@@ -9,7 +10,7 @@
 #include <unordered_map>
 #include <vector>
 
-template <typename T>
+template<typename T>
 void measurePerformance(T& t, const std::string& cont) {
     // measure performance template
     std::cout << std::fixed << std::setprecision(10);
@@ -26,6 +27,13 @@ void measurePerformance(T& t, const std::string& cont) {
     end = std::chrono::system_clock::now() - start;
     auto moveTime = std::chrono::duration<double>(end).count();
     std::cout <<  " Move: " << moveTime << " sec" << std::endl;
+}
+
+template<class rep, class period>
+void blink_led(std::chrono::duration<rep, period> time_to_blink) {
+    // assuming that millisecond is the smallest relevant unit
+    auto milliseconds_to_blink = std::chrono::duration_cast<std::chrono::milliseconds>(time_to_blink);
+    std::cout << milliseconds_to_blink << std::endl;
 }
 
 #endif // FUNCTION_H
