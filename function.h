@@ -29,11 +29,12 @@ void measurePerformance(T& t, const std::string& cont) {
     std::cout <<  " Move: " << moveTime << " sec" << std::endl;
 }
 
+// The function can also be written in such a way that it will accept any time duration unit.
 template<class rep, class period>
 void blink_led(std::chrono::duration<rep, period> time_to_blink) {
     // assuming that millisecond is the smallest relevant unit
-    auto milliseconds_to_blink = std::chrono::duration_cast<std::chrono::milliseconds>(time_to_blink);
-    std::cout << milliseconds_to_blink << std::endl;
+    auto milliseconds_to_blink = std::chrono::duration_cast<std::chrono::milliseconds>(time_to_blink).count();
+    std::cout << milliseconds_to_blink << " milliseconds" << std::endl;
 }
 
 #endif // FUNCTION_H

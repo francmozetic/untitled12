@@ -337,6 +337,9 @@ int main(int argc, char *argv[])
         measurePerformance(unmap, "std::unordered_map<int,int>");
     }
 
+    using jiffies = std::chrono::duration<int, std::ratio<1, 100>>;
+    blink_led(jiffies(100));
+
     auto y = run_once([](int x){ return x; }); // run lambda expression once
     std::cout << "run_once(lambda): " << y << std::endl;
     // _________________________________________________________________________________________________________________
