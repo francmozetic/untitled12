@@ -20,6 +20,18 @@ public:
 
     std::vector<double> vecdsimilarity;
 
+    void initTo(void) {
+        winWidthSamples = winWidth * fs / 1000;
+        frameShiftSamples = frameShift * fs / 1000;
+        numFFTBins = numFFT / 2 + 1;
+        powerSpectralCoef.assign(numFFTBins, 0);
+        prevSamples.assign(winWidthSamples - frameShiftSamples, 0);
+
+        initFilterbank();
+        initHammingDct();
+        compTwiddle();
+    }
+
     // Calculate cosine similarity between two vectors
     double cosine_similarity(std::vector<double> veca, std::vector<double> vecb) {
         double multiply = 0.0;
@@ -117,20 +129,19 @@ public:
             std::cout << "Sampling rate mismatch: found " << hdr.SamplesPerSec << " instead of " << fs << std::endl;
             return 1;
         }
-        std::cout << "Audio format ok: 16 bit PCM Wave" << std::endl;
+
+        uint16_t bufferLength = winWidthSamples - frameShiftSamples;
+        std::cout << bufferLength << std::endl;
 
         // Initialise buffer (allocate a block of memory of type double, dynamically allocated memory is allocated on Heap^)
-        uint16_t bufferLength = winWidthSamples - frameShiftSamples;
         double * buffer = new double[bufferLength];
         // Calculate bytes per sample (size of the first element in bytes)
         int bufferbps = (sizeof buffer[0]);
-        std::cout << bufferLength << std::endl;
 
         // Read and set the initial samples
         wavFp.read((char *)buffer, bufferLength * bufferbps);   // cast the pointer of the double variable to a pointer to characters
         for (int i=0; i<bufferLength; i++) {
             prevSamples[i] = buffer[i];                         // prevSamples[i] is an ith element of std::vector<double>
-            std::cout << prevSamples[i];
         }
         delete [] buffer;
 
@@ -148,6 +159,7 @@ public:
         }
 
         // Allocate memory for self-similarity measures
+        std::cout << "Allocate memory for self-similarity measures: " << std::endl;
         vecdsimilarity.reserve(365 * 790);
         vecdsimilarity.clear();
         std::vector<double> veca, vecb;
@@ -158,8 +170,10 @@ public:
                 vecb = vecdmfcc[i];
                 measure = 1 - cosine_similarity(veca, vecb);
                 vecdsimilarity.push_back(measure);
+                std::cout << measure << " ";
             }
         }
+        std::cout << std::endl;
 
         delete [] buffer;
         buffer = nullptr;
@@ -425,6 +439,7 @@ widget::widget() : pimpl(std::make_unique<impl>()) {
     if (!wavFp.is_open()) {
         std::cout << "Unable to open input file: " << wavPath << std::endl;
     }
+    pimpl->initTo();
     pimpl->processTo(wavFp);
     wavFp.close();
 
