@@ -167,7 +167,7 @@ public:
             for (size_t i=j; i<790; i++) {
                 vecb = vecdmfcc[i];
                 // ...measure = 1 - cosine_similarity(veca, vecb);
-
+                // Lambda expression (read veca, vecb variables by reference)
                 measure = 1 - [&veca, &vecb](){
                     double multiply = 0.0;
                     double d_a = 0.0;
@@ -183,7 +183,6 @@ public:
 
                     return multiply / (sqrt(d_a) * sqrt(d_b));
                 }();
-
                 vecdsimilarity.push_back(measure);
             }
         }
