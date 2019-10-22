@@ -5,7 +5,8 @@ QT += qml quick
 CONFIG += c++17
 
 SOURCES += main.cpp \
-    widget.cpp
+    widget.cpp \
+    function.cpp
 
 RESOURCES += qml.qrc
 
