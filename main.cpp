@@ -44,7 +44,7 @@ public:
 
 class Object {
 public:
-    template <typename T>
+    template<typename T>
     Object(const T& obj) : object(std::make_shared<ObjectModel<T>>(std::move(obj))) {} // let's heap-allocate the ObjectModel...
     /* Object(const T& obj) : object(new ObjectModel<T>(obj)) {}
      * Object(const T& obj) : object(std::make_shared<ObjectModel<T>>(obj)) {}
@@ -62,7 +62,7 @@ public:
         virtual double implementation(double param) const = 0;
     };
 
-    template <typename T>
+    template<typename T>
     struct ObjectModel : ObjectConcept {
         ObjectModel(const T& obj) : object(std::move(obj)) {}
         virtual ~ObjectModel() {}
