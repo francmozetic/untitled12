@@ -231,29 +231,37 @@ void draw(const document_t& x, std::ostream& out, size_t position) {
 // _________________________________________________________________________________________________________________
 
 /* ##### Eli Bendersky - The cost of static (CRTP) dispatch in C++ (2013 Bendersky)
- * Template Metaprogramming
+ * CRTP can be used to achive static polymorphism which is an imitation of polymorphism in programming code.
  */
 template<typename T>
 class Interface {
 public:
     void tick(uint64_t n) {
-        impl()->tick(n);
+        static_cast<T*>(this)->tick(n);
     }
     uint64_t getvalue() {
-        return impl()->getvalue();
+        return static_cast<T*>(this)->getvalue();
     }
-    double calculate(double param) {
-        return impl()->calculate(param);
-    }
-    /*
     double calculate(double param) { // to je ok
         return static_cast<T*>(this)->calculate(param);
     }
-    */
-private:
-    T* impl() { // to je pomembno...
-        return static_cast<T*>(this);
+};
+
+class Implementation : public Interface<Implementation> {
+    Implementation() : counter(0) {}
+
+    void tick(uint64_t n) {
+        counter += n;
     }
+    uint64_t getvalue() {
+        return counter;
+    }
+    double calculate(double param) {
+        return (param * param) / 2.5;
+    }
+
+private:
+    uint64_t counter;
 };
 // _________________________________________________________________________________________________________________
 
