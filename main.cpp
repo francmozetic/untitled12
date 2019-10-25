@@ -90,7 +90,7 @@ struct AbstractCallback {
     virtual ~AbstractCallback() = default;
 };
 
-template <class T>
+template<class T>
 struct WrappingCallback : AbstractCallback {
     explicit WrappingCallback(T&& cb) : cb_(std::move(cb)) {} // explicit move constructor...
     int call(int x) const override {
@@ -104,7 +104,7 @@ struct Callback {
     // Instances of type Callback can be created with arbitrary types because it has a generic constructor.
     std::unique_ptr<AbstractCallback> ptr_;
 
-    template <class T>
+    template<class T>
     Callback(T t) : ptr_(std::make_unique<WrappingCallback<T>>(std::move(t))) {} // let's heap-allocate the WrappingCallback...
     /* Callback(T t) : ptr_(new WrappingCallback<T>(std::move(t))) {}
      */
@@ -275,6 +275,7 @@ int main(int argc, char *argv[])
 
     wavFp.close();
     mfcFp.close();
+    // _________________________________________________________________________________________________________________
 
     // ## type erasure with templates
     std::cout << "is_copy_constructible<Object>: " << std::is_copy_constructible<Object>::value << '\n';
