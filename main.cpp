@@ -9,6 +9,30 @@
 #include <function.h>
 #include <widget.h>
 
+/* ###### Eli Bendersky - The cost of static (CRTP) dispatch in C++ (2013 Bendersky)
+ * Template Metaprogramming
+ */
+template<typename T>
+class Interface {
+public:
+    void tick(uint64_t n) {
+        impl()->tick(n);
+    }
+    uint64_t getvalue() {
+        return impl()->getvalue();
+    }
+    double calculate(double param) {
+        return impl()->calculate(param);
+    }
+    /*
+    double calculate(double param) { // to je ok
+        return static_cast<T*>(this)->calculate(param);
+    }
+    */
+private:
+
+};
+
 /* ## Type Erasure with Templates from jsmith cplusplus.com article (2010 jsmith)
  * Instances of type Object can be created with arbitrary types because it has a generic constructor.
  */
