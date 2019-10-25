@@ -237,13 +237,21 @@ template<typename T>
 class Interface {
 public:
     void tick(uint64_t n) {
-        static_cast<T*>(this)->tick(n);
+        impl().tick(n);
     }
     uint64_t getvalue() {
-        return static_cast<T*>(this)->getvalue();
+        return impl().getvalue();
     }
-    double calculate(double param) { // to je ok
+    double calculate(double param) {
+        return impl().calculate(param);
+    }
+    /* to je ok...
+    double calculate(double param) {
         return static_cast<T*>(this)->calculate(param);
+    } */
+private:
+    T& impl() {
+        return *static_cast<T*>(this);
     }
 };
 
@@ -391,12 +399,12 @@ int main(int argc, char *argv[])
     document.emplace_back(2);
     document.emplace_back(Wild()); // creates a temporary object...
 
-    auto start0 = std::chrono::system_clock::now();
+    auto start_ = std::chrono::system_clock::now();
     for (auto i=0; i<10000; ++i) {
         std::reverse(document.begin(), document.end());
     }
-    std::chrono::duration<double> duration0 = std::chrono::system_clock::now() - start0;
-    std::cout << "Time native: " << duration0.count() << " seconds" << std::endl;
+    std::chrono::duration<double> duration_ = std::chrono::system_clock::now() - start_;
+    std::cout << "Time native: " << duration_.count() << " seconds" << std::endl;
     /*
      * Time native: 0.000272 seconds
      * Time native: 0.000281 seconds
@@ -409,14 +417,14 @@ int main(int argc, char *argv[])
     // _________________________________________________________________________________________________________________
 
     // ##### CRTP
-    auto start_ = std::chrono::system_clock::now();
+    start_ = std::chrono::system_clock::now();
     std::unique_ptr<Interface<Implementation>> object = std::make_unique<Implementation>();
     auto val = 0.0;
     for (auto i = 0; i < 1000000; ++i) {
         val += object->calculate(10.6);
     }
     object.reset(nullptr);
-    std::chrono::duration<double> duration_ = std::chrono::system_clock::now() - start_;
+    duration_ = std::chrono::system_clock::now() - start_;
     std::cout << val << " Execution time with CRTP : " << duration_.count() << " seconds" << std::endl;
     // _________________________________________________________________________________________________________________
 
