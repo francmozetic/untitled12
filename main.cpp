@@ -48,9 +48,6 @@ int run_once(const Callback& callback) {
     std::cout << "is_polymorphic<AbstractCallback>: "
               << std::is_polymorphic<AbstractCallback>::value
               << '\n';
-    std::cout << "is_final<AbstractCallback>: "
-              << std::is_final<AbstractCallback>::value
-              << '\n';
     std::cout << "is_member_function_pointer<&AbstractCallback::call>: "
               << std::is_member_function_pointer<decltype(&AbstractCallback::call)>::value
               << '\n';
@@ -100,6 +97,10 @@ int main(int argc, char *argv[])
 
     wavFp.close();
     mfcFp.close();
+
+    // function object (run lambda expression once)
+    auto y = run_once([](int x){ return x; });
+    std::cout << "run_once(lambda): " << y << std::endl;
 
     return app.exec();
 }
