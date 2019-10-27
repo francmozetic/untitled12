@@ -156,10 +156,10 @@ public:
         // Initialise buffer (allocate a block of memory of type double, dynamically allocated memory is allocated on Heap^)
         uint16_t bufferLength = winWidthSamples - frameShiftSamples;
         int16_t * buffer = new int16_t[bufferLength];
-        std::cout << "is_pointer=" << std::is_pointer<decltype(buffer)>::value << std::endl;
+        std::cout << "is_pointer: " << std::is_pointer<decltype(buffer)>::value << std::endl;
         // Calculate bytes per sample (size of the first element in bytes)
         int bufferbps = (sizeof buffer[0]);
-        std::cout << bufferLength << std::endl;
+        std::cout << "bufferLength: " << bufferLength << std::endl;
 
         // Read and set the initial samples
         wavFp.read((char *)buffer, bufferLength * bufferbps);   // cast the pointer of the double variable to a pointer to characters
@@ -450,23 +450,20 @@ private:
                 twiddle[n][k] = exp(-2*PI*k/n*J);
     }
 
-
-
-
-
     int internal_data = 0;
 };
 
 int widget::processTo(std::ifstream &wavFp) {
+
     return pimpl->processTo(wavFp);
 }
 
 void widget::do_internal_work() {
+
     pimpl->do_internal_work();
 }
 
 widget::widget() : pimpl(std::make_unique<impl>()) {
-    std::cout << "is_rvalue_reference=" << std::is_rvalue_reference<widget&&>::value << std::endl;
 
     const char* wavPath = "partita.wav";
     std::ifstream wavFp;

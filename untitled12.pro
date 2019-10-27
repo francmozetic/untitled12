@@ -10,8 +10,8 @@ SOURCES += main.cpp \
 
 RESOURCES += qml.qrc
 
-# Default rules for deployment.
-include(deployment.pri)
-
 HEADERS += \
     widget.h
+
+# Default rules for deployment.
+include(deployment.pri)

@@ -58,6 +58,7 @@ int run_once(const Callback& callback) {
     std::cout << "is_move_constructible<Callback>: "
               << std::is_move_constructible<Callback>::value
               << '\n';
+
     return callback(10);
 }
 // _________________________________________________________________________________________________________________
