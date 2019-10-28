@@ -249,6 +249,7 @@ public:
     double calculate(double param) {
         return static_cast<T*>(this)->calculate(param);
     } */
+
 private:
     T& impl() {
         return *static_cast<T*>(this);
