@@ -275,6 +275,29 @@ private:
 };
 // _________________________________________________________________________________________________________________
 
+/* Abstract base classes are classes that can only be used as base classes, and thus are allowed to have virtual
+ * member functions without definition (known as pure virtual functions).
+ */
+class BaseVirtual
+{
+public:
+    double interface(double param) {
+        return implementation(param);
+    }
+
+protected:
+    virtual double implementation(double param) = 0;
+};
+
+class DerivedVirtual : public BaseVirtual
+{
+protected:
+    double implementation(double param) {
+        return (param * param) / 2.5;
+    }
+};
+// _________________________________________________________________________________________________________________
+
 
 
 int main(int argc, char *argv[])
@@ -427,6 +450,18 @@ int main(int argc, char *argv[])
     object.reset(nullptr);
     duration_ = std::chrono::system_clock::now() - start_;
     std::cout << val << " Execution time with CRTP : " << duration_.count() << " seconds" << std::endl;
+    // _________________________________________________________________________________________________________________
+
+    // ###### virtual
+    start_ = std::chrono::system_clock::now();
+    std::unique_ptr<BaseVirtual> baseVirtual = std::make_unique<DerivedVirtual>();
+    val = 0.0;
+    for (unsigned int i = 0; i < 1000000; ++i) {
+        val += baseVirtual->interface(10.6);
+    }
+    baseVirtual.reset(nullptr);
+    duration_ = std::chrono::system_clock::now() - start_;
+    std::cout << val << " Execution time with virtual : " << duration_.count() << " seconds" << std::endl;
     // _________________________________________________________________________________________________________________
 
     return app.exec();
