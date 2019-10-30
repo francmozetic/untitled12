@@ -27,6 +27,7 @@ public:
     }
 };
 
+// Building a task system
 class task_system {
     const unsigned _count = std::thread::hardware_concurrency();
     std::vector<std::thread> _threads;
@@ -39,4 +40,19 @@ class task_system {
             f();
         }
     }
+
+public:
+    task_system() {
+        for (unsigned n=0; n!=_count; ++n) {
+            _threads.emplace_back([&, n](){ run(n); });
+        }
+    }
+    ~task_system() {
+        for (auto& e : _threads) {
+            e.join();
+        }
+    }
+
+
+
 };
