@@ -6,7 +6,8 @@ CONFIG += c++17
 
 SOURCES += main.cpp \
     widget.cpp \
-    function.cpp
+    function.cpp \
+    task.cpp
 
 RESOURCES += qml.qrc
 

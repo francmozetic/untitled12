@@ -274,7 +274,8 @@ private:
 };
 // _________________________________________________________________________________________________________________
 
-/* Abstract base classes are classes that can only be used as base classes, and thus are allowed to have virtual
+/* ######
+ * Abstract base classes are classes that can only be used as base classes, and thus are allowed to have virtual
  * member functions without definition (known as pure virtual functions).
  */
 class BaseVirtual
