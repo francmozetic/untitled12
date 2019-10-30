@@ -6,7 +6,7 @@
 
 class notification_queue {
     std::deque<std::function<void()>> _q;
-    bool _done = false;
+    bool _done{false};
     std::mutex _mutex;
     std::condition_variable _ready;
 
@@ -30,7 +30,7 @@ public:
 
 // Building a task system
 class task_system {
-    const unsigned _count = std::thread::hardware_concurrency();
+    const unsigned _count{std::thread::hardware_concurrency()};
     std::vector<std::thread> _threads;
     notification_queue _q;
 
