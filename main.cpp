@@ -101,7 +101,6 @@ struct WrappingCallback : AbstractCallback {
 };
 
 struct Callback {
-    // Instances of type Callback can be created with arbitrary types because it has a generic constructor.
     std::unique_ptr<AbstractCallback> ptr_;
 
     template<class T>
@@ -450,7 +449,7 @@ int main(int argc, char *argv[])
     std::cout << val << " Execution time with inline : " << duration_.count() << " seconds" << std::endl;
     // _________________________________________________________________________________________________________________
 
-    // ##### CRTP
+    // ##### test CRTP
     start_ = std::chrono::system_clock::now();
     std::unique_ptr<Interface<Implementation>> object = std::make_unique<Implementation>();
     val = 0.0;
@@ -465,7 +464,7 @@ int main(int argc, char *argv[])
      */
     // _________________________________________________________________________________________________________________
 
-    // ###### virtual
+    // ###### test virtual
     start_ = std::chrono::system_clock::now();
     std::unique_ptr<BaseVirtual> baseVirtual = std::make_unique<DerivedVirtual>();
     val = 0.0;
