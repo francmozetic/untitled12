@@ -6,13 +6,14 @@
 
 class notification_queue {
     std::deque<std::function<void()>> _q;
+    bool _done = false;
     std::mutex _mutex;
     std::condition_variable _ready;
 
 public:
     void pop(std::function<void()>& x) {
         std::unique_lock<std::mutex> lock{_mutex};
-        while (_q.empty()) _ready.wait(lock);
+        while (_q.empty() && !_done) _ready.wait(lock);
         x = std::move(_q.front());
         _q.pop_front();
     }
@@ -51,6 +52,11 @@ public:
         for (auto& e : _threads) {
             e.join();
         }
+    }
+
+    template<typename F>
+    void async(F&& f) {
+        _q.push(std::forward<F>(f));
     }
 
 
