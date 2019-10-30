@@ -440,10 +440,20 @@ int main(int argc, char *argv[])
     draw(document, std::cout, 0);
     // _________________________________________________________________________________________________________________
 
+    // test inline
+    start_ = std::chrono::system_clock::now();
+    auto val = 0.0;
+    for (auto i = 0; i < 1000000; ++i) {
+        val += 10.6 * 10.6 / 2.5;
+    }
+    duration_ = std::chrono::system_clock::now() - start_;
+    std::cout << val << " Execution time with inline : " << duration_.count() << " seconds" << std::endl;
+    // _________________________________________________________________________________________________________________
+
     // ##### CRTP
     start_ = std::chrono::system_clock::now();
     std::unique_ptr<Interface<Implementation>> object = std::make_unique<Implementation>();
-    auto val = 0.0;
+    val = 0.0;
     for (auto i = 0; i < 1000000; ++i) {
         val += object->calculate(10.6);
     }
