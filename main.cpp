@@ -459,7 +459,7 @@ int main(int argc, char *argv[])
     start_ = std::chrono::system_clock::now();
     std::unique_ptr<BaseVirtual> baseVirtual = std::make_unique<DerivedVirtual>();
     val = 0.0;
-    for (unsigned int i = 0; i < 1000000; ++i) {
+    for (auto i = 0; i < 1000000; ++i) {
         val += baseVirtual->interface(10.6);
     }
     baseVirtual.reset(nullptr);
