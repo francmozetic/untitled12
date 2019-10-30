@@ -286,13 +286,13 @@ public:
     }
 
 protected:
-    virtual double implementation(double param) = 0;
+    virtual double implementation(double param) const = 0; // pure virtual function
 };
 
 class DerivedVirtual : public BaseVirtual
 {
 protected:
-    double implementation(double param) {
+    double implementation(double param) const override {
         return (param * param) / 2.5;
     }
 };
@@ -450,6 +450,9 @@ int main(int argc, char *argv[])
     object.reset(nullptr);
     duration_ = std::chrono::system_clock::now() - start_;
     std::cout << val << " Execution time with CRTP : " << duration_.count() << " seconds" << std::endl;
+    /* Execution time with CRTP : 0.0054275240 seconds
+     * Execution time with CRTP : 0.0050275620 seconds
+     */
     // _________________________________________________________________________________________________________________
 
     // ###### virtual
@@ -462,6 +465,9 @@ int main(int argc, char *argv[])
     baseVirtual.reset(nullptr);
     duration_ = std::chrono::system_clock::now() - start_;
     std::cout << val << " Execution time with virtual : " << duration_.count() << " seconds" << std::endl;
+    /* Execution time with virtual : 0.0073420240 seconds
+     * Execution time with virtual : 0.0070977140 seconds
+     */
     // _________________________________________________________________________________________________________________
 
     return app.exec();
