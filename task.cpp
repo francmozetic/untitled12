@@ -5,10 +5,12 @@
 #include <thread>
 #include <vector>
 
-/* Building a simple task system using a scheduler and task stealing
- * The mutex class is a synchronization primitive that can be used to protect shared data from being
- * simultaneously accessed by multiple threads.
- * The class unique_lock is a general-purpose mutex ownership wrapper allowing deferred locking, ...
+/* Building a simple task system using a scheduler
+ * (_q) std::deque (double-ended queue) is an indexed sequence container that allows fast insertion
+ * and deletion at both its beginning and its end. The storage of a deque is automatically expanded and contracted as needed.
+ * (_mutex) The mutex class is a synchronization primitive that can be used to protect shared data from being
+ * simultaneously accessed by multiple threads. The class unique_lock is a general-purpose mutex ownership
+ * wrapper allowing deferred locking, ...
  */
 class notification_queue {
     std::deque<std::function<void()>> _q;
