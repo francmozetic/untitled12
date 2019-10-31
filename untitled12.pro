@@ -13,7 +13,8 @@ RESOURCES += qml.qrc
 
 HEADERS += \
     widget.h \
-    function.h
+    function.h \
+    task.h
 
 # Default rules for deployment.
 include(deployment.pri)
