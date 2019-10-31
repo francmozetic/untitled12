@@ -1,7 +1,9 @@
 #ifndef TASK_H
 #define TASK_H
 
-template<typename T>
+#include <future>
+
+template<class T>
 using decay_t = typename std::decay<T>::type;
 template<class T>
 using result_of_t = typename std::result_of<T>::type;
