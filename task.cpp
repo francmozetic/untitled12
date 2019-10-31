@@ -44,6 +44,10 @@ public:
     }
 };
 
+/* (_index) Atomic is a new kid in town since C++11. Also called lockless. Atomic is here to ensure no races are to be
+ * expected while accessing a variable. The possible syntax can result in a very compact code, at which you may not
+ * always be aware the _index you’re reading actually involves the overhead of atomic operations.
+ */
 class task_system {
     // returns the number of concurrent threads supported by the implementation
     const unsigned _count{std::thread::hardware_concurrency()};
@@ -54,7 +58,7 @@ class task_system {
 
     void run(unsigned i) {
         while (true) {
-            std::function<void()> f;
+            std::function<void()> f; // store a function
             _q[i].pop(f);
             f();
         }
@@ -85,3 +89,7 @@ public:
 
 
 };
+/* The template function std::async runs the function f asynchronously (potentially in a separate thread
+ * which may be part of a thread pool) and returns a std::future that will eventually hold the result of
+ * that function call.
+ */
