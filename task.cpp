@@ -5,7 +5,11 @@
 #include <thread>
 #include <vector>
 
-// Building a task system
+/* Building a simple task system using a scheduler and task stealing
+ * The mutex class is a synchronization primitive that can be used to protect shared data from being
+ * simultaneously accessed by multiple threads.
+ * The class unique_lock is a general-purpose mutex ownership wrapper allowing deferred locking, ...
+ */
 class notification_queue {
     std::deque<std::function<void()>> _q;
     bool _done{false};
@@ -39,7 +43,9 @@ public:
 };
 
 class task_system {
+    // returns the number of concurrent threads supported by the implementation
     const unsigned _count{std::thread::hardware_concurrency()};
+    // one notification queue for each thread...
     std::vector<std::thread> _threads;
     std::vector<notification_queue> _q{_count};
     std::atomic<unsigned> _index{0};
@@ -61,7 +67,7 @@ public:
 
     ~task_system() {
         for (auto& e : _threads) {
-            e.join();
+            e.join(); // waits for a thread to finish its execution
         }
         for (auto& e : _q) {
             e.done();
