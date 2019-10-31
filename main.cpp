@@ -307,6 +307,14 @@ protected:
 };
 // _________________________________________________________________________________________________________________
 
+void func_string(std::string const& x) {
+    std::cout << x << "\n";
+}
+
+void func_int(int x) {
+    std::cout << x << "\n";
+}
+
 class notification_queue {
     std::deque<std::function<void()>> _q;
     bool _done{false};
@@ -325,8 +333,8 @@ public:
     void pop(std::function<void()>& x) {
         std::unique_lock<std::mutex> lock{_mutex};
         while (_q.empty() && !_done) _ready.wait(lock);
-        x = std::move(_q.front());
-        _q.pop_front();
+        x = std::move(_q.front()); // access the first element
+        _q.pop_front(); // removes the first element
     }
 
     template<typename F>
@@ -351,7 +359,9 @@ class task_system {
         while (true) {
             std::function<void()> f; // store a function
             _q[i].pop(f);
-            f();
+            //f();
+            auto res = spawn_task(func_int, 10);
+            res.get();
         }
     }
 
@@ -382,12 +392,9 @@ public:
 };
 // _________________________________________________________________________________________________________________
 
-void func_string(std::string const& x) {
-    std::cout << x << "\n";
-}
-
-void func_int(int x) {
-    std::cout << x << "\n";
+void print_num(int i)
+{
+    std::cout << i << " ";
 }
 
 
@@ -437,13 +444,26 @@ int main(int argc, char *argv[])
 
     std::string str = "abc";
     auto res1 = spawn_task(func_string, str);
-    res1.get();
+    res1.get(); // returns the result
 
     auto res2 = spawn_task(func_string, std::move(str));
     res2.get();
 
     auto res3 = spawn_task(func_int, 10);
     res3.get();
+
+    std::function<void()> f_display_42 = [](){ print_num(42); };
+
+    task_system ts;
+    ts.async(f_display_42);
+    ts.async(f_display_42);
+    ts.async(f_display_42);
+    ts.async(f_display_42);
+    ts.async(f_display_42);
+    ts.async(f_display_42);
+    ts.async(f_display_42);
+    ts.async(f_display_42);
+    ts.async(f_display_42);
 
     // ## type erasure with templates
     std::cout << "is_copy_constructible<Object>: " << std::is_copy_constructible<Object>::value << '\n';

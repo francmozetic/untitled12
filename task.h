@@ -8,7 +8,7 @@ using result_of_t = typename std::result_of<T>::type;
 
 template<typename F, typename A>
 std::future<result_of_t<decay_t<F>(decay_t<A>)>> spawn_task(F&& f, A&& a) {
-    std::cout << "in spawn_task()" << "\n";
+    //std::cout << "in spawn_task()" << "\n";
     using result_t = result_of_t<decay_t<F>(decay_t<A>)>;
     std::packaged_task<result_t(decay_t<A>)> task(std::forward<F>(f));
     auto res = task.get_future();
