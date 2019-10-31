@@ -6,7 +6,16 @@
 #include <iostream>
 #include <memory>
 
+#include <atomic>
+#include <condition_variable>
+#include <deque>
+#include <future>
+#include <mutex>
+#include <thread>
+#include <vector>
+
 #include <function.h>
+#include <task.h>
 #include <widget.h>
 
 /* ## Type Erasure with Templates from jsmith cplusplus.com article (2010 jsmith)
@@ -298,6 +307,89 @@ protected:
 };
 // _________________________________________________________________________________________________________________
 
+class notification_queue {
+    std::deque<std::function<void()>> _q;
+    bool _done{false};
+    std::mutex _mutex;
+    std::condition_variable _ready;
+
+public:
+    void done() {
+        {
+            std::unique_lock<std::mutex> lock{_mutex};
+            _done = true;
+        }
+        _ready.notify_all();
+    }
+
+    void pop(std::function<void()>& x) {
+        std::unique_lock<std::mutex> lock{_mutex};
+        while (_q.empty() && !_done) _ready.wait(lock);
+        x = std::move(_q.front());
+        _q.pop_front();
+    }
+
+    template<typename F>
+    void push(F&& f) {
+        {
+            std::unique_lock<std::mutex> lock{_mutex};
+            _q.emplace_back(std::forward<F>(f));
+        }
+        _ready.notify_one();
+    }
+};
+
+class task_system {
+    // returns the number of concurrent threads supported by the implementation
+    const unsigned _count{std::thread::hardware_concurrency()};
+    // one notification queue for each thread...
+    std::vector<std::thread> _threads;
+    std::vector<notification_queue> _q{_count};
+    std::atomic<unsigned> _index{0};
+
+    void run(unsigned i) {
+        while (true) {
+            std::function<void()> f; // store a function
+            _q[i].pop(f);
+            f();
+        }
+    }
+
+public:
+    task_system() {
+        for (unsigned n=0; n!=_count; ++n) {
+            _threads.emplace_back([&, n](){ run(n); });
+        }
+    }
+
+    ~task_system() {
+        for (auto& e : _threads) {
+            e.join(); // waits for a thread to finish its execution
+        }
+        for (auto& e : _q) {
+            e.done();
+        }
+    }
+
+    template<typename F>
+    void async(F&& f) {
+        auto i = _index++;
+        _q[i % _count].push(std::forward<F>(f));
+    }
+
+
+
+};
+// _________________________________________________________________________________________________________________
+
+void func_string(std::string const& x) {
+    std::cout << x << "\n";
+}
+
+void func_int(int x) {
+    std::cout << x << "\n";
+}
+
 
 
 int main(int argc, char *argv[])
@@ -342,6 +434,16 @@ int main(int argc, char *argv[])
     wavFp.close();
     mfcFp.close();
     // _________________________________________________________________________________________________________________
+
+    std::string str = "abc";
+    auto res1 = spawn_task(func_string, str);
+    res1.get();
+
+    auto res2 = spawn_task(func_string, std::move(str));
+    res2.get();
+
+    auto res3 = spawn_task(func_int, 10);
+    res3.get();
 
     // ## type erasure with templates
     std::cout << "is_copy_constructible<Object>: " << std::is_copy_constructible<Object>::value << '\n';
