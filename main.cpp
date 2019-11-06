@@ -6,6 +6,7 @@
 #include <iostream>
 #include <memory>
 
+#include <function.h>
 #include <widget.h>
 
 /* ## Type Erasure with Templates from jsmith cplusplus.com article (2010 jsmith)
@@ -311,7 +312,15 @@ int main(int argc, char *argv[])
     }
     // _________________________________________________________________________________________________________________
 
-    // ### function object
+    // ### run function object
+    {
+        std::vector<int> vec(1000000);
+        measurePerformance(vec, "std::vector<int>(1000000)");
+    }
+    {
+        std::list<int> lis(1000000);
+        measurePerformance(lis, "std::list<int>(1000000)");
+    }
     auto y = run_once([](int x){ return x; }); // run lambda expression once
     std::cout << "run_once(lambda): " << y << std::endl;
     // _________________________________________________________________________________________________________________
