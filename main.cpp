@@ -311,6 +311,7 @@ protected:
 /* Building a simple task system using a scheduler
  * (_q) std::deque (double-ended queue) is an indexed sequence container that allows fast insertion
  * and deletion at both its beginning and its end. The storage of a deque is automatically expanded and contracted as needed.
+ * (_q) What std::function<void()> does is represent any callable that can be invoked with no arguments.
  * (_mutex) The mutex class is a synchronization primitive that can be used to protect shared data from being
  * simultaneously accessed by multiple threads. The class unique_lock is a general-purpose mutex ownership
  * wrapper allowing deferred locking, ...
@@ -468,6 +469,8 @@ int main(int argc, char *argv[])
     std::cout << s << std::endl;
 
     std::function<void()> f_display_42 = [](){ print_num(); };
+    std::cout << "is_copy_assignable<std::function<void()>: " << std::is_copy_assignable<std::function<void()>>::value << '\n';
+    std::cout << "is_move_assignable<std::function<void()>: " << std::is_move_assignable<std::function<void()>>::value << '\n';
 
     task_system ts;
     ts.async(f_display_42);
