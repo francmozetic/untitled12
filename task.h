@@ -1,6 +1,7 @@
 #ifndef TASK_H
 #define TASK_H
 
+#include <functional>
 #include <future>
 #include <memory>
 
@@ -20,10 +21,18 @@ std::future<result_of_t<decay_t<F>(decay_t<A>)>> spawn_task(F&& f, A&& a) {
     return res;
 }
 
-template<class F>
-void call_async(F&& fun) {
-    auto ptr = std::make_shared<std::future<void>>();
-    *ptr = std::async(std::launch::async, fun);
+template <class Func, class... Args>
+std::future <std::result_of_t <std::decay_t<Func>(std::decay_t <Args>...)>> async_task(Func&& f, Args&&... args) {
+    using return_type = std::result_of_t<std::decay_t<Func>(std::decay_t<Args>...)>;
+
+    std::packaged_task<return_type(std::decay_t<Func> f, std::decay_t<Args>... args)> task(
+        [](std::decay_t<Func> f, std::decay_t<Args>... args){ return f(args...); }
+    );
+
+    auto task_future = task.get_future();
+    std::thread t(std::move(task), f, std::forward<Args>(args)...);
+    t.detach ();
+    return task_future;
 }
 
 #endif // TASK_H

@@ -5,6 +5,7 @@
 #include <fstream>
 #include <iostream>
 #include <memory>
+#include <string>
 
 #include <atomic>
 #include <condition_variable>
@@ -383,15 +384,18 @@ void print_num()
     std::cout << str;
 }
 
-void func_string(std::string const& x) {
-    std::cout << x << "\n";
+std::string func_string(std::string const& x) {
+    return x;
 }
 
 void func_int(int x) {
     std::cout << x << "\n";
 }
 
-
+std::string append_to_string(const std::string& x)
+{
+    return x + ", something...";
+}
 
 int main(int argc, char *argv[])
 {
@@ -438,13 +442,19 @@ int main(int argc, char *argv[])
 
     std::string str = "abc";
     auto res1 = spawn_task(func_string, str);
-    res1.get(); // returns the result
+    auto s = res1.get(); // returns the result
+    std::cout << s << std::endl;
 
     auto res2 = spawn_task(func_string, std::move(str));
-    res2.get();
+    s = res2.get();
+    std::cout << s << std::endl;
 
     auto res3 = spawn_task(func_int, 10);
     res3.get();
+
+    auto f4 = async_task(append_to_string, "Hello world");
+    s = f4.get();
+    std::cout << s << std::endl;
 
     std::function<void()> f_display_42 = [](){ print_num(); };
 
