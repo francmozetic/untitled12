@@ -308,6 +308,13 @@ protected:
 };
 // _________________________________________________________________________________________________________________
 
+/* Building a simple task system using a scheduler
+ * (_q) std::deque (double-ended queue) is an indexed sequence container that allows fast insertion
+ * and deletion at both its beginning and its end. The storage of a deque is automatically expanded and contracted as needed.
+ * (_mutex) The mutex class is a synchronization primitive that can be used to protect shared data from being
+ * simultaneously accessed by multiple threads. The class unique_lock is a general-purpose mutex ownership
+ * wrapper allowing deferred locking, ...
+ */
 class notification_queue {
     std::deque<std::function<void()>> _q;
     bool _done{false};
@@ -340,6 +347,10 @@ public:
     }
 };
 
+/* (_index) Atomic is a new kid in town since C++11. Atomic is here to ensure no races are to be expected while
+ * accessing a variable. The possible syntax can result in a very compact code, at which you may not always be
+ * aware the _index you’re incrementing actually involves the overhead of atomic operations.
+ */
 class task_system {
     // returns the number of concurrent threads supported by the implementation
     const unsigned _count{std::thread::hardware_concurrency()};
@@ -353,7 +364,7 @@ public:
         for (unsigned n=0; n!=_count; ++n) {
             _threads.emplace_back([&, n](){
                 while (true) {
-                    std::function<void()> f; // polymorphic function wrapper
+                    std::function<void()> f; // general-purpose polymorphic function wrapper
                     _q[n].pop(f);
                     f();
                 }

@@ -22,7 +22,7 @@ std::future<result_of_t<decay_t<F>(decay_t<A>)>> spawn_task(F&& f, A&& a) {
 }
 
 template <class Func, class... Args>
-std::future <std::result_of_t <std::decay_t<Func>(std::decay_t <Args>...)>> async_task(Func&& f, Args&&... args) {
+std::future <std::result_of_t<std::decay_t<Func>(std::decay_t <Args>...)>> async_task(Func&& f, Args&&... args) {
     using return_type = std::result_of_t<std::decay_t<Func>(std::decay_t<Args>...)>;
 
     std::packaged_task<return_type(std::decay_t<Func> f, std::decay_t<Args>... args)> task(
