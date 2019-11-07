@@ -385,7 +385,7 @@ public:
     template<typename F>
     void async(F&& f) {
         auto i = _index++;
-        _q[i % _count].push(std::forward<F>(f));
+        _q[i % _count].push(std::forward<F>(f)); // forwards lvalues as either lvalues or as rvalues, depending on F
     }
 };
 // _________________________________________________________________________________________________________________
