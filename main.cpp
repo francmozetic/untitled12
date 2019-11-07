@@ -307,14 +307,6 @@ protected:
 };
 // _________________________________________________________________________________________________________________
 
-void func_string(std::string const& x) {
-    std::cout << x << "\n";
-}
-
-void func_int(int x) {
-    std::cout << x << "\n";
-}
-
 class notification_queue {
     std::deque<std::function<void()>> _q;
     bool _done{false};
@@ -355,20 +347,16 @@ class task_system {
     std::vector<notification_queue> _q{_count};
     std::atomic<unsigned> _index{0};
 
-    void run(unsigned i) {
-        while (true) {
-            std::function<void()> f; // store a function
-            _q[i].pop(f);
-            //f();
-            auto res = spawn_task(func_int, 10);
-            res.get();
-        }
-    }
-
 public:
     task_system() {
         for (unsigned n=0; n!=_count; ++n) {
-            _threads.emplace_back([&, n](){ run(n); });
+            _threads.emplace_back([&, n](){
+                while (true) {
+                    std::function<void()> f; // polymorphic function wrapper
+                    _q[n].pop(f);
+                    f();
+                }
+            });
         }
     }
 
@@ -386,15 +374,21 @@ public:
         auto i = _index++;
         _q[i % _count].push(std::forward<F>(f));
     }
-
-
-
 };
 // _________________________________________________________________________________________________________________
 
-void print_num(int i)
+void print_num()
 {
-    std::cout << i << " ";
+    std::string str = "qrc:/main.qml\n";
+    std::cout << str;
+}
+
+void func_string(std::string const& x) {
+    std::cout << x << "\n";
+}
+
+void func_int(int x) {
+    std::cout << x << "\n";
 }
 
 
@@ -452,7 +446,7 @@ int main(int argc, char *argv[])
     auto res3 = spawn_task(func_int, 10);
     res3.get();
 
-    std::function<void()> f_display_42 = [](){ print_num(42); };
+    std::function<void()> f_display_42 = [](){ print_num(); };
 
     task_system ts;
     ts.async(f_display_42);

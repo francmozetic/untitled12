@@ -2,6 +2,7 @@
 #define TASK_H
 
 #include <future>
+#include <memory>
 
 template<class T>
 using decay_t = typename std::decay<T>::type;
@@ -19,5 +20,10 @@ std::future<result_of_t<decay_t<F>(decay_t<A>)>> spawn_task(F&& f, A&& a) {
     return res;
 }
 
-#endif // TASK_H
+template<class F>
+void call_async(F&& fun) {
+    auto ptr = std::make_shared<std::future<void>>();
+    *ptr = std::async(std::launch::async, fun);
+}
 
+#endif // TASK_H
