@@ -348,9 +348,9 @@ public:
     }
 };
 
-/* (_index) Atomic is a new kid in town since C++11. Atomic is here to ensure no races are to be expected while
- * accessing a variable. The possible syntax can result in a very compact code, at which you may not always be
- * aware the _index you’re incrementing actually involves the overhead of atomic operations.
+/* (_index) Atomic is here to ensure no races are to be expected while accessing a variable. The possible syntax
+ * can result in a very compact code, at which you may not always be aware the _index you’re incrementing actually
+ * involves the overhead of atomic operations.
  */
 class task_system {
     // returns the number of concurrent threads supported by the implementation
