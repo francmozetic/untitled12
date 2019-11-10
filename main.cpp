@@ -248,6 +248,7 @@ public:
 };
 
 class Implementation : public Interface<Implementation> {
+public:
     Implementation() : counter(0) {}
 
     void tick(uint64_t n) {
@@ -405,6 +406,18 @@ int main(int argc, char *argv[])
      * Time native: 0.0002723100 seconds
      */
     draw(document, std::cout, 0);
+    // _________________________________________________________________________________________________________________
+
+    // ##### CRTP
+    auto start_ = std::chrono::system_clock::now();
+    std::unique_ptr<Interface<Implementation>> object = std::make_unique<Implementation>();
+    auto val = 0.0;
+    for (auto i = 0; i < 1000000; ++i) {
+        val += object->calculate(10.6);
+    }
+    object.reset(nullptr);
+    std::chrono::duration<double> duration_ = std::chrono::system_clock::now() - start_;
+    std::cout << val << " Execution time with CRTP : " << duration_.count() << " seconds" << std::endl;
     // _________________________________________________________________________________________________________________
 
     return app.exec();
